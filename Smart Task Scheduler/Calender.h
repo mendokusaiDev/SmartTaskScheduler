@@ -1,8 +1,10 @@
 #pragma once
+#include "LinkedList.h"
+#include "node.h"
 
 namespace scheduler {
 
-	class cal_Year {
+	class cal_Year : node{
 		/*
 		멤버 변수: cal_Month의 headptr을 저장
 
@@ -10,6 +12,18 @@ namespace scheduler {
 				   월 추가하기
 		*/
 
+	private:
+		node* month;
+		node* next;
+		int year;
+		int month_count;
+
+	public:
+		const cal_Year* findYear(int year);
+		void createYear(int year);
+		void link();
+		
+		
 	};
 	
 	class cal_Month {
@@ -19,6 +33,17 @@ namespace scheduler {
 		멤버 함수: 월 추가하기
 		           일 추가하기
 		*/
+
+	private:
+		node* day;
+		node* schedule;
+		int month;
+		int year;
+
+	public:
+		void createMonth(int month);
+		const cal_Month* findMonth(int month);
+		void link();
 
 	};
 
@@ -32,10 +57,17 @@ namespace scheduler {
 
 	};
 
+	class cal_Week {
+
+
+	};
+
 	class Calender {
 		/*
 		멤버 변수: cal_Year의 headptr을 저장
 		           통계 저장
+				   완료된 일정 저장 배열
+				   미완료된 일정 저장 배열
 
 				 
 
@@ -50,5 +82,19 @@ namespace scheduler {
 		
 		*/
 
+	private:
+
+
+	public:
+
+		void addTask();
+		void deleteTask();
+		void changeInterval();
+		void changeSchedule();
+		cal_Day get_day();
+		cal_Month get_Month();
+		cal_Week get_Week();
+		void getStatistics();
+		Calender();
 	};
 }

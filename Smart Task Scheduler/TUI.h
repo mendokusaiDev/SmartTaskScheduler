@@ -1,4 +1,5 @@
 #pragma once
+#include "Calender.h"
 
 namespace scheduler {
 	
@@ -16,5 +17,19 @@ namespace scheduler {
 						
 		*/
 
+	private:
+		Calender* c;
+		void showMonth();
+		void showWeek();
+		void showDay();
+		void addTask();
+		void editTask();
+		void changeInterval();
+		void showSchedule();
+
+	public:
+		void mainMenu();
+		TUI();
+		TUI(Calender& c);
 	};
 }
