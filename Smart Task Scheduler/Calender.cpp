@@ -29,7 +29,7 @@ namespace scheduler {
 
 	}
 
-	cal_Day Calender::get_day() {
+	cal_Day Calender::get_Day() {
 
 
 	}

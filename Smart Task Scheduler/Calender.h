@@ -89,9 +89,10 @@ namespace scheduler {
 
 		void addTask();
 		void deleteTask();
+		void editTask();
 		void changeInterval();
 		void changeSchedule();
-		cal_Day get_day();
+		cal_Day get_Day();
 		cal_Month get_Month();
 		cal_Week get_Week();
 		void getStatistics();

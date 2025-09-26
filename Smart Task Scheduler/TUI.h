@@ -25,7 +25,7 @@ namespace scheduler {
 		void addTask();
 		void editTask();
 		void changeInterval();
-		void showSchedule();
+		void showStatistics();
 
 	public:
 		void mainMenu();

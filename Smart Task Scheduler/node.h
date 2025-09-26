@@ -6,6 +6,7 @@ namespace scheduler {
 
 	private:
 		node* next;
+		node* data;
 
 	public:
 		virtual void link() = 0;

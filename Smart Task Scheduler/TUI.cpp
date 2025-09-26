@@ -35,7 +35,7 @@ namespace scheduler {
 
 	}
 
-	void TUI::showSchedule() {
+	void TUI::showStatistics() {
 
 
 
