@@ -1,14 +1,17 @@
 #pragma once
-#include "node.h"
+#include "Calender.h"
 
 namespace scheduler {
-	
-	static class linkedlist {
+
+	static class LinkedList {
 	public:
-		static void add_node();
-		static void delete_node();
-		//static void edit_node();
-		static void search_node();
-		//static void clear();
+		static void add_node(cal_Year* headptr, int year);
+		static void add_node(cal_Month* headptr, int month);
+		static void add_node(cal_Day* headptr, int day);
+
+		static cal_Year* search_node(cal_Year* headptr, int year);
+		static cal_Month* search_node(cal_Year* headptr, int year, int month);
+		static cal_Day* search_node(cal_Year* headptr, int year, int month, int day);
+
 	};
 }

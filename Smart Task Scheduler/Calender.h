@@ -1,101 +1,113 @@
 #pragma once
-#include "LinkedList.h"
+#include "Scheduler.h"
 #include "node.h"
+#include <map>
+#include <vector>
+#include <string>
+
+using namespace std;
+
 
 namespace scheduler {
 
-	class cal_Year : node{
-		/*
-		ë©¤ë²„ ë³€ìˆ˜: cal_Monthì˜ headptrì„ ì €ì¥
-
-		ë©¤ë²„ í•¨ìˆ˜: ë…„ë„ ì¶”ê°€í•˜ê¸°
-				   ì›” ì¶”ê°€í•˜ê¸°
-		*/
-
+	class Task {
 	private:
-		node* month;
-		node* next;
-		int year;
-		int month_count;
-
+		string name;  //ÀÌ¸§
+		int enddate;   //¸¶°¨ ³¯Â¥ (³â¿ùÀÏ½ÃºĞ)
+		int duration;  //¿¹»ó ¼Ò¿ä ½Ã°£
+		int type;      //ÀÛ¾÷ Á¾·ù
+		int starttime;  //½ÃÀÛ ½Ã°£
+		int endtime;    //³¡ ½Ã°£
+		int TaskNum;  //°íÀ¯ ÀÛ¾÷ ¹øÈ£
+		bool finished = 0; //¿Ï·á ¿©ºÎ
+		
 	public:
-		const cal_Year* findYear(int year);
-		void createYear(int year);
-		void link();
-		
-		
+		Task(string name, int enddate, int duration, int type, int taskNum);
+		void changeTask(string name, int enddate, int duration, int type);
+		int getTaskNum();
 	};
 	
-	class cal_Month {
-		/*
-		ë©¤ë²„ ë³€ìˆ˜: cal_Dayì˜ headptrì„ ì €ì¥
-
-		ë©¤ë²„ í•¨ìˆ˜: ì›” ì¶”ê°€í•˜ê¸°
-		           ì¼ ì¶”ê°€í•˜ê¸°
-		*/
-
+	
+	class cal_Year : node {
 	private:
-		node* day;
-		node* schedule;
-		int month;
-		int year;
+		int year;  //¿¬µµ
+		node* next;  //´ÙÀ½ ¿¬µµ
+		node* month_head;  //±× ¿¬µµÀÇ month head Æ÷ÀÎÅÍ
+		int month_count;   //±× ¿¬µµ¿¡¼­ ¸¸µé¾îÁø monthÀÇ °³¼ö
 
 	public:
-		void createMonth(int month);
-		const cal_Month* findMonth(int month);
-		void link();
+		void link(node * next);
+		void setData(node* data);
 
+		cal_Year(int year);
 	};
 
-	class cal_Day {
-		/*
-		ë©¤ë²„ ë³€ìˆ˜: í•˜ë£¨ ì¼ì • (ê·¸ í•˜ë£¨ì— í•´ë‹¹í•˜ëŠ” Task ë¥¼ LinkedList í˜•ì‹ìœ¼ë¡œ ì €ì¥)
+	class cal_Month : node {
+	private:
+		int year;  //¿¬µµ
+		int month;  //¿ù
+		node* next;  //´ÙÀ½ ¿ù
+		node* day_head;   //±× ¿ùÀÇ day head Æ÷ÀÎÅÍ
+		int day_count;  //¸¸µé¾îÁø day ÀÇ °³¼ö
 
-		ë©¤ë²„ í•¨ìˆ˜: ì¼ì • í• ë‹¹í•˜ê¸°
-		           ì¼ì • ë¦¬ì…‹í•˜ê¸°
-		*/
+	public:
+		void link(node* next);
+		void setData(node* data);
 
+		cal_Month(int year, int month);
 	};
 
-	class cal_Week {
+	class cal_Day : node {
+	private:
+		int year; //¿¬µµ
+		int month;  //¿ù
+		int day;   //ÀÏ
+		node* next;   //´ÙÀ½ ÀÏ
+		map<int, Task*> saved;  //ÇØ¾ßµÇ´Â ÀÏÁ¤ÀÇ ¹øÈ£
+		
 
-
+	public:
+		void link(node* next);
+		cal_Day(int year, int month, int day);
 	};
+
+
 
 	class Calender {
-		/*
-		ë©¤ë²„ ë³€ìˆ˜: cal_Yearì˜ headptrì„ ì €ì¥
-		           í†µê³„ ì €ì¥
-				   ì™„ë£Œëœ ì¼ì • ì €ì¥ ë°°ì—´
-				   ë¯¸ì™„ë£Œëœ ì¼ì • ì €ì¥ ë°°ì—´
-
-				 
-
-		ë©¤ë²„ í•¨ìˆ˜: ì¼ì • ì¶”ê°€í•˜ê¸°
-				   ì¼ì • ì‚­ì œí•˜ê¸°
-				   ì¼ì • ì¸í„°ë²Œ ë°”ê¾¸ê¸°
-				   ì›” ë‹¨ìœ„ ì£¼ìš” ì¼ì • ì •ë³´ ê°€ì ¸ì˜¤ê¸°
-				   ì£¼ ë‹¨ìœ„ ì¼ì • ì •ë³´ ê°€ì ¸ì˜¤ê¸°
-				   ì¼ ë‹¨ìœ„ ì¼ì • ì •ë³´ ê°€ì ¸ì˜¤ê¸°
-				   ì¼ì • ë³€ê²½í•˜ê¸°
-				   í†µê³„ ë¶ˆëŸ¬ì˜¤ê¸°
-		
-		*/
-
 	private:
+		vector<int> queued; //ÀÏÁ¤¿¡ ÇÒ´ç µÈ ÀÛ¾÷
+		vector<int> failed;  //ÀÏÁ¤ ÇÒ´ç¿¡ ½ÇÆĞÇÑ ÀÛ¾÷
+		vector<int> finished;  //³¡³­ ÀÏÁ¤
+		map<int, Task*> allTasks;  //¸ğµç ÀÛ¾÷
+		cal_Year* headptr;  //¿¬µµ headptr
+		int tasks_count = 0;  //´©Àû ÀÏÁ¤ °³¼ö (ÀÌ°Ô ÀÏÁ¤ÀÇ °íÀ¯¹øÈ£°¡ µÊ)
+		Scheduler* S;  //½ºÄÉÁÙ·¯
 
+		typedef struct _stats {
+			int finished_count; //¿Ï·áÇÑ ÀÛ¾÷
+			int unfinished_count;  //¿Ï·áÇÏÁö ¸øÇÑ ÀÛ¾÷
+			int to_do_count;  //¾ÕÀ¸·Î ³²Àº ÀÛ¾÷ÀÇ °³¼ö
+			int tasktypes[100];   //ÀÛ¾÷ÀÇ Á¾·ù¸¦ ÀúÀåÇÏ´Â ¹è¿­
+		} calStats;   //Åë°è ÀúÀå
+
+		calStats stat = { 0,0,0,{0, } };
+
+		void refreshCal();
 
 	public:
-
-		void addTask();
-		void deleteTask();
-		void editTask();
-		void changeInterval();
-		void changeSchedule();
-		cal_Day get_Day();
-		cal_Month get_Month();
-		cal_Week get_Week();
-		void getStatistics();
 		Calender();
+
+		bool addTask(string name, int dur, int duedate, int type);
+		bool deleteTask(int taskNum);
+		bool editTask(int taskNum, string name, int dur, int duedate, int type);
+		void markFinished(int taskNum);
+
+		bool get_Day(vector<Task*> tasks, int year, int month, int day);
+		bool get_Week(vector<Task*> tasks, int year, int month, int day);
+		bool get_Month(vector<Task*> tasks, int year, int month, int day);
+		calStats getStatistics();
+
+		bool changeInterval(int interval, vector<Task*> queued, vector<Task*> failed);
+
 	};
 }
