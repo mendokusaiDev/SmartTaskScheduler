@@ -28,47 +28,36 @@ namespace scheduler {
 	};
 	
 	
-	class cal_Year : node {
+	class cal_Year{
 	private:
 		int year;  //연도
-		node* next;  //다음 연도
-		node* month_head;  //그 연도의 month head 포인터
-		int month_count;   //그 연도에서 만들어진 month의 개수
+		map<int, cal_Month*> month_headptr;
 
 	public:
-		void link(node * next);
-		void setData(node* data);
-
+		cal_Month* get_Month(int month);
 		cal_Year(int year);
 	};
 
-	class cal_Month : node {
+	class cal_Month{
 	private:
 		int year;  //연도
 		int month;  //월
-		node* next;  //다음 월
-		node* day_head;   //그 월의 day head 포인터
-		int day_count;  //만들어진 day 의 개수
 
 	public:
-		void link(node* next);
-		void setData(node* data);
-
+		cal_Day* get_Day(int day);
 		cal_Month(int year, int month);
 	};
 
-	class cal_Day : node {
+	class cal_Day{
 	private:
 		int year; //연도
 		int month;  //월
 		int day;   //일
-		node* next;   //다음 일
 		map<int, Task*> saved;  //해야되는 일정의 번호
 		
-
 	public:
-		void link(node* next);
-		cal_Day(int year, int month, int day);
+		void insert_Task(int tasknum, Task* task);
+		vector<Task*> get_Tasks();
 	};
 
 
@@ -79,7 +68,8 @@ namespace scheduler {
 		vector<int> failed;  //일정 할당에 실패한 작업
 		vector<int> finished;  //끝난 일정
 		map<int, Task*> allTasks;  //모든 작업
-		cal_Year* headptr;  //연도 headptr
+		//cal_Year* headptr;  //연도 headptr
+		map<int, cal_Year*> year_headptr; //연도 headptr
 		int tasks_count = 0;  //누적 일정 개수 (이게 일정의 고유번호가 됨)
 		Scheduler* S;  //스케줄러
 
