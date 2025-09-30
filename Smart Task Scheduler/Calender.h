@@ -1,6 +1,6 @@
 #pragma once
 #include "Scheduler.h"
-#include "node.h"
+#include "Node.h"
 #include <map>
 #include <vector>
 #include <string>
@@ -35,6 +35,7 @@ namespace scheduler {
 
 	public:
 		cal_Month* get_Month(int month);
+		void set_Month(int month);
 		cal_Year(int year);
 	};
 
@@ -45,6 +46,7 @@ namespace scheduler {
 
 	public:
 		cal_Day* get_Day(int day);
+		void set_Day(int day);
 		cal_Month(int year, int month);
 	};
 
@@ -53,11 +55,13 @@ namespace scheduler {
 		int year; //연도
 		int month;  //월
 		int day;   //일
-		map<int, Task*> saved;  //해야되는 일정의 번호
+		node* Task_headpr;
 		
 	public:
 		void insert_Task(int tasknum, Task* task);
 		vector<Task*> get_Tasks();
+		void freeTask();
+		cal_Day(int year, int month, int day);
 	};
 
 

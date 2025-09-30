@@ -1,11 +1,14 @@
 #pragma once
-
+#include "Calender.h"
 namespace scheduler {
 
 	class node {
-
+	private:
+		Task* task;
 	public:
-		virtual void link(node* next) = 0;
-		virtual void setData(node* data) = 0;
+		void setLink(node* next);
+		node* getLink();
+		void setData(Task* data);
+		Task* getData();
 	};
 }

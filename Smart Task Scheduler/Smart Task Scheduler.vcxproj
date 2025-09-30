@@ -21,7 +21,7 @@
   <ItemGroup>
     <ClInclude Include="Calender.h" />
     <ClInclude Include="LinkedList.h" />
-    <ClInclude Include="node.h" />
+    <ClInclude Include="Node.h" />
     <ClInclude Include="Priority_queue.h" />
     <ClInclude Include="Scheduler.h" />
     <ClInclude Include="TUI.h" />
