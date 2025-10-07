@@ -34,6 +34,9 @@ namespace scheduler {
 		Task(string name, int enddate, int duration, int type, int taskNum);
 		void changeTask(string name, int enddate, int duration, int type);
 		int getTaskNum();
+		void setTime(int starttime, int endtime);
+		void resetTime();
+
 	};
 	
 	

@@ -1,6 +1,7 @@
 #include "Calender.h"
 #include "LinkedList.h"
 #include "Node.h"
+#include "Scheduler.h"
 #include <iostream>
 
 namespace scheduler {
@@ -28,6 +29,15 @@ namespace scheduler {
 
 	int Task::getTaskNum() {
 		return this->TaskNum;
+	}
+
+	void Task::setTime(int startime, int endtime) {
+		this->starttime = starttime;
+		this->endtime = endtime;
+	}
+
+	void Task::resetTime() {
+		setTime(-1, -1);
 	}
 
 
@@ -132,12 +142,24 @@ namespace scheduler {
 	//public:
 
 	Calender::Calender() {
-
-
-
+		this->S = new Scheduler(); //스케줄러 생성
 	}
 
 	bool Calender::addTask(string name, int dur, int duedate, int type) {
+		/*
+			1. task 만들기
+			2. refresh cal
+		
+		*/
+
+		this->allTasks[this->tasks_count] = new Task(name, duedate, dur, type, tasks_count);
+		this->tasks_count++;
+
+		vector<Task*> tempq, tempf;
+		for (int ptr : queued) tempq.push_back(this->allTasks[ptr]);
+		for (int ptr : failed) tempq.push_back(this->allTasks[ptr]);
+
+		S->makeSchedule(tempq, tempf);
 
 
 
