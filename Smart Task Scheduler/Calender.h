@@ -10,6 +10,15 @@ using namespace std;
 
 namespace scheduler {
 
+	#define OTHER 0
+	#define SCHOOL_HW 1
+
+	string task_type[10] = {  //여기에 Task 종류 추가
+		"Other",
+		"School Homework"
+	};
+
+
 	class Task {
 	private:
 		string name;  //이름
@@ -25,6 +34,9 @@ namespace scheduler {
 		Task(string name, int enddate, int duration, int type, int taskNum);
 		void changeTask(string name, int enddate, int duration, int type);
 		int getTaskNum();
+		void setTime(int starttime, int endtime);
+		void resetTime();
+
 	};
 	
 	
@@ -43,6 +55,7 @@ namespace scheduler {
 	private:
 		int year;  //연도
 		int month;  //월
+		map<int, cal_Day*> day_headptr;
 
 	public:
 		cal_Day* get_Day(int day);
@@ -55,7 +68,7 @@ namespace scheduler {
 		int year; //연도
 		int month;  //월
 		int day;   //일
-		node* Task_headpr;
+		node* Task_headptr;
 		
 	public:
 		void insert_Task(int tasknum, Task* task);
@@ -83,6 +96,7 @@ namespace scheduler {
 			int to_do_count;  //앞으로 남은 작업의 개수
 			int tasktypes[100];   //작업의 종류를 저장하는 배열
 		} calStats;   //통계 저장
+
 
 		calStats stat = { 0,0,0,{0, } };
 
