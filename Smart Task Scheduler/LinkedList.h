@@ -1,12 +1,14 @@
 #pragma once
 #include "Calender.h"
 #include "Node.h"
+
+
 namespace scheduler {
 
-	static class LinkedList {
+	class LinkedList {
 	public:
 		static void insert(node* headptr, node* ins);
-		vector<node*> get_list(node* headptr);
-		void free_List();
+		static vector<node*> get_list(node* headptr);
+		static void free_List(node*& headptr);
 	};
 }

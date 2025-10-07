@@ -1,6 +1,6 @@
 #pragma once
 #include "Scheduler.h"
-#include "Node.h"
+#include "node.h"
 #include <map>
 #include <vector>
 #include <string>
@@ -10,27 +10,41 @@ using namespace std;
 
 namespace scheduler {
 
+	#define OTHER 0
+	#define SCHOOL_HW 1
+
+	string task_type[10] = {  
+		"Other",
+		"School Homework"
+	};
+
+
 	class Task {
 	private:
-		string name;  //이름
-		int enddate;   //마감 날짜 (년월일시분)
-		int duration;  //예상 소요 시간
-		int type;      //작업 종류
-		int starttime;  //시작 시간
-		int endtime;    //끝 시간
-		int TaskNum;  //고유 작업 번호
-		bool finished = 0; //완료 여부
+		string name;  
+		int enddate;   
+		int duration;  
+		int type;      
+		int starttime;  
+		int endtime;    
+		int TaskNum;  
+		bool finished = 0; 
 		
 	public:
 		Task(string name, int enddate, int duration, int type, int taskNum);
 		void changeTask(string name, int enddate, int duration, int type);
 		int getTaskNum();
+		void setTime(int starttime, int endtime);
+		void resetTime();
+		int getEndDate() const { return enddate; }
+    	int getDuration() const { return duration; }
+
 	};
 	
 	
 	class cal_Year{
 	private:
-		int year;  //연도
+		int year;  
 		map<int, cal_Month*> month_headptr;
 
 	public:
@@ -41,8 +55,9 @@ namespace scheduler {
 
 	class cal_Month{
 	private:
-		int year;  //연도
-		int month;  //월
+		int year;  
+		int month;  
+		map<int, cal_Day*> day_headptr;
 
 	public:
 		cal_Day* get_Day(int day);
@@ -52,10 +67,10 @@ namespace scheduler {
 
 	class cal_Day{
 	private:
-		int year; //연도
-		int month;  //월
-		int day;   //일
-		node* Task_headpr;
+		int year; 
+		int month;  
+		int day;   
+		node* Task_headptr;
 		
 	public:
 		void insert_Task(int tasknum, Task* task);
@@ -68,21 +83,22 @@ namespace scheduler {
 
 	class Calender {
 	private:
-		vector<int> queued; //일정에 할당 된 작업
-		vector<int> failed;  //일정 할당에 실패한 작업
-		vector<int> finished;  //끝난 일정
-		map<int, Task*> allTasks;  //모든 작업
-		//cal_Year* headptr;  //연도 headptr
-		map<int, cal_Year*> year_headptr; //연도 headptr
-		int tasks_count = 0;  //누적 일정 개수 (이게 일정의 고유번호가 됨)
-		Scheduler* S;  //스케줄러
+		vector<int> queued; 
+		vector<int> failed;  
+		vector<int> finished;  
+		map<int, Task*> allTasks;  
+		
+		map<int, cal_Year*> year_headptr; 
+		int tasks_count = 0;  
+		Scheduler* S; 
 
 		typedef struct _stats {
-			int finished_count; //완료한 작업
-			int unfinished_count;  //완료하지 못한 작업
-			int to_do_count;  //앞으로 남은 작업의 개수
-			int tasktypes[100];   //작업의 종류를 저장하는 배열
-		} calStats;   //통계 저장
+			int finished_count; 
+			int unfinished_count; 
+			int to_do_count;  
+			int tasktypes[100];   
+		} calStats;   
+
 
 		calStats stat = { 0,0,0,{0, } };
 
