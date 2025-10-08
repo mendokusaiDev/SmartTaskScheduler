@@ -162,7 +162,6 @@ namespace scheduler {
 		S->makeSchedule(tempq, tempf);
 
 
-
 	}
 
 	bool Calender::deleteTask(int taskNum) {
