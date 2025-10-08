@@ -35,6 +35,7 @@ namespace scheduler {
 		void changeTask(string name, int enddate, int duration, int type);
 		int getTaskNum();
 		void setTime(int starttime, int endtime);
+		void getTime(int& starttime, int& endtime);
 		void resetTime();
 
 	};
@@ -75,6 +76,7 @@ namespace scheduler {
 		vector<Task*> get_Tasks();
 		void freeTask();
 		cal_Day(int year, int month, int day);
+		void freeTaskNum(int tasknum)
 	};
 
 
@@ -101,6 +103,9 @@ namespace scheduler {
 		calStats stat = { 0,0,0,{0, } };
 
 		void refreshCal();
+		void remakeCal(vector<Task*>& newq, vector<Task*>& newf);
+		cal_Day* find(int date);
+		cal_Day* newDay(int date);
 
 	public:
 		Calender();
@@ -110,12 +115,12 @@ namespace scheduler {
 		bool editTask(int taskNum, string name, int dur, int duedate, int type);
 		void markFinished(int taskNum);
 
-		bool get_Day(vector<Task*> tasks, int year, int month, int day);
-		bool get_Week(vector<Task*> tasks, int year, int month, int day);
-		bool get_Month(vector<Task*> tasks, int year, int month, int day);
+		bool get_Day(vector<Task*> & tasks, int year, int month, int day);
+		bool get_Week(vector<Task*> & tasks, int year, int month, int day);
+		bool get_Month(vector<Task*> & tasks, int year, int month, int day);
 		calStats getStatistics();
 
-		bool changeInterval(int interval, vector<Task*> queued, vector<Task*> failed);
+		bool changeInterval(int interval, vector<Task*> & queued, vector<Task*> & failed);  //새로운 queued하고 failed 반환해줌.
 
 	};
 }

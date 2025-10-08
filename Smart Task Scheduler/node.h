@@ -12,6 +12,7 @@ namespace scheduler {
 		node* getLink();
 		void setData(Task* data);
 		Task* getData();
+		int get_tasknum();
 		node(Task * task, int task_num);
 	};
 }
