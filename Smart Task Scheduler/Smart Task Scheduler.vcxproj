@@ -26,6 +26,10 @@
     <ClInclude Include="Scheduler.h" />
     <ClInclude Include="TUI.h" />
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Calender.cpp" />
+    <ClCompile Include="Node.cpp" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
