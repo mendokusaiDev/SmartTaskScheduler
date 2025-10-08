@@ -1,4 +1,4 @@
-#include "../Priority_queue.h"
+#include "Priority_queue.h"
 #include <algorithm> // std::push_heap, std::pop_heap을 사용하기 위해 포함
 #include <stdexcept> // 예외 처리를 위해 포함
 
