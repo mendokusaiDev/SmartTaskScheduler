@@ -26,6 +26,14 @@
     <ClInclude Include="Scheduler.h" />
     <ClInclude Include="TUI.h" />
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Calender.cpp" />
+    <ClCompile Include="LinkedList.cpp" />
+    <ClCompile Include="Node.cpp" />
+    <ClCompile Include="Priority_queue.cpp" />
+    <ClCompile Include="Scheduler.cpp" />
+    <ClCompile Include="TUI.cpp" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
