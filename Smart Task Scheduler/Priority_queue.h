@@ -8,6 +8,8 @@ class PriorityQueue {
 private:
     // Task 포인터를 저장하고, 이 벡터를 기반으로 힙 자료구조를 구성
     std::vector<Task*> heap;
+	void heapify_up(int index);   // 특정 노드를 부모와 비교하며 위로 올리는 함수
+    void heapify_down(int index); // 특정 노드를 자식과 비교하며 아래로 내리는 함수
 
 public:
     // 큐 비우기.
