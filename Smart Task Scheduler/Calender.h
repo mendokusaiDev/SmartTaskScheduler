@@ -25,8 +25,8 @@ namespace scheduler {
 		int enddate;   //마감 날짜 (년월일시분)
 		int duration;  //예상 소요 시간
 		int type;      //작업 종류
-		int starttime;  //시작 시간
-		int endtime;    //끝 시간
+		long long starttime;  //시작 시간
+		long long endtime;    //끝 시간
 		int TaskNum;  //고유 작업 번호
 		bool finished = 0; //완료 여부
 		
@@ -34,9 +34,21 @@ namespace scheduler {
 		Task(string name, int enddate, int duration, int type, int taskNum);
 		void changeTask(string name, int enddate, int duration, int type);
 		int getTaskNum();
-		void setTime(int starttime, int endtime);
-		void getTime(int& starttime, int& endtime);
+		void setTime(long long starttime, long long endtime);
+		void getTime(long long& starttime, long long& endtime);
+		bool isfinished() {
+			return finished;
+		}
+		void done() {
+			finished = 1;
+		}
 		void resetTime();
+		int getType() {
+			return type;
+		}
+		int getEnddate() {
+			return enddate;
+		}
 
 	};
 	
@@ -76,7 +88,7 @@ namespace scheduler {
 		vector<Task*> get_Tasks();
 		void freeTask();
 		cal_Day(int year, int month, int day);
-		void freeTaskNum(int tasknum)
+		void freeTaskNum(int tasknum);
 	};
 
 
@@ -106,6 +118,11 @@ namespace scheduler {
 		void remakeCal(vector<Task*>& newq, vector<Task*>& newf);
 		cal_Day* find(int date);
 		cal_Day* newDay(int date);
+
+		int get_max_day(int year, int month);
+		void get_next_day(int& year, int& month, int& day);
+		void get_first_day_of_week(int & year, int & month, int & day);
+		void get_current_time(int& year, int& month, int& day, int& hour, int& minute);
 
 	public:
 		Calender();
