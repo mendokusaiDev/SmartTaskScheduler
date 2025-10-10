@@ -7,8 +7,9 @@ namespace scheduler {
 
 	class LinkedList {
 	public:
-		static void insert(node* headptr, node* ins);
+		static void insert(node* headptr, Task * task);
 		static vector<node*> get_list(node* headptr);
 		static void free_List(node*& headptr);
+		static void deleteTask(node *& headptr, int tasknum);
 	};
 }
