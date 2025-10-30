@@ -48,9 +48,9 @@ namespace scheduler {
 		int getType() {
 			return type;
 		}
-		int getEnddate() {
-			return enddate;
-		}
+		//int getEnddate() {
+		//	return enddate;
+		//}
 
 	};
 	

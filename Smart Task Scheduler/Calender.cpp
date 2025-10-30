@@ -40,7 +40,7 @@ namespace scheduler {
 		return this->TaskNum;
 	}
 
-	void Task::setTime(long long startime, long long endtime) {
+	void Task::setTime(long long starttime, long long endtime) {
 		this->starttime = starttime;
 		this->endtime = endtime;
 	}
@@ -110,17 +110,13 @@ namespace scheduler {
 	//cal Day 관련
 
 	void cal_Day::insert_Task(int tasknum, Task* task) {
-		LinkedList::insert(this->Task_headptr, task);
+		LinkedList::insert_tail(this->Task_headptr, task);
 		return;
 	}
 
 	vector<Task*> cal_Day::get_Tasks() {
-		vector<node*> temp = LinkedList::get_list(this->Task_headptr);
-		vector<Task*> ret;
-		for (node* ptr : temp) {
-			ret.push_back(ptr->getData());
-		}
 
+		vector<Task*> ret = LinkedList::get_list(this->Task_headptr);
 		return ret;
 	}
 
@@ -246,7 +242,7 @@ namespace scheduler {
 		for (int cur : queued) {
 			long long starttime, endtime;
 			allTasks[cur]->getTime(starttime, endtime);
-			if (endtime > curtime) {
+			if (endtime < curtime) {
 				markFinished(cur);
 				continue;
 			}
@@ -255,7 +251,7 @@ namespace scheduler {
 
 		//2. failed에 있는 것 중 enddate가 안지난것만 남기기
 		for (int cur : failed) {
-			int enddate = allTasks[cur]->getEnddate();
+			int enddate = allTasks[cur]->getEndDate();
 			if (enddate > curtime_2) continue;
 			newq.push_back(allTasks[cur]);
 		}
@@ -420,6 +416,7 @@ namespace scheduler {
 		if (year_headptr.find(year) == year_headptr.end()) return false;
 
 		cal_Year* curY = year_headptr[year];
+		if (curY == nullptr) return false;
 		cal_Month* curM = curY->get_Month(month);
 		if (curM == nullptr) return false;
 		cal_Day* curD = nullptr;
