@@ -13,7 +13,7 @@ namespace scheduler {
 	#define OTHER 0
 	#define SCHOOL_HW 1
 
-	string task_type[10] = {  //¿©±â¿¡ Task Á¾·ù Ãß°¡
+	string task_type[10] = {  //ì—¬ê¸°ì— Task ì¢…ë¥˜ ì¶”ê°€
 		"Other",
 		"School Homework"
 	};
@@ -21,14 +21,14 @@ namespace scheduler {
 
 	class Task {
 	private:
-		string name;  //ÀÌ¸§
-		int enddate;   //¸¶°¨ ³¯Â¥ (³â¿ùÀÏ½ÃºĞ)
-		int duration;  //¿¹»ó ¼Ò¿ä ½Ã°£
-		int type;      //ÀÛ¾÷ Á¾·ù
-		long long starttime;  //½ÃÀÛ ½Ã°£
-		long long endtime;    //³¡ ½Ã°£
-		int TaskNum;  //°íÀ¯ ÀÛ¾÷ ¹øÈ£
-		bool finished = 0; //¿Ï·á ¿©ºÎ
+		string name;  //ì´ë¦„
+		int enddate;   //ë§ˆê° ë‚ ì§œ (ë…„ì›”ì¼ì‹œë¶„)
+		int duration;  //ì˜ˆìƒ ì†Œìš” ì‹œê°„
+		int type;      //ì‘ì—… ì¢…ë¥˜
+		long long starttime;  //ì‹œì‘ ì‹œê°„
+		long long endtime;    //ë ì‹œê°„
+		int TaskNum;  //ê³ ìœ  ì‘ì—… ë²ˆí˜¸
+		bool finished = 0; //ì™„ë£Œ ì—¬ë¶€
 		
 	public:
 		Task(string name, int enddate, int duration, int type, int taskNum);
@@ -57,7 +57,7 @@ namespace scheduler {
 	
 	class cal_Year{
 	private:
-		int year;  //¿¬µµ
+		int year;  //ì—°ë„
 		map<int, cal_Month*> month_headptr;
 
 	public:
@@ -68,8 +68,8 @@ namespace scheduler {
 
 	class cal_Month{
 	private:
-		int year;  //¿¬µµ
-		int month;  //¿ù
+		int year;  //ì—°ë„
+		int month;  //ì›”
 		map<int, cal_Day*> day_headptr;
 
 	public:
@@ -80,9 +80,9 @@ namespace scheduler {
 
 	class cal_Day{
 	private:
-		int year; //¿¬µµ
-		int month;  //¿ù
-		int day;   //ÀÏ
+		int year; //ì—°ë„
+		int month;  //ì›”
+		int day;   //ì¼
 		node* Task_headptr;
 		
 	public:
@@ -97,21 +97,21 @@ namespace scheduler {
 
 	class Calender {
 	private:
-		vector<int> queued; //ÀÏÁ¤¿¡ ÇÒ´ç µÈ ÀÛ¾÷
-		vector<int> failed;  //ÀÏÁ¤ ÇÒ´ç¿¡ ½ÇÆĞÇÑ ÀÛ¾÷
-		vector<int> finished;  //³¡³­ ÀÏÁ¤
-		map<int, Task*> allTasks;  //¸ğµç ÀÛ¾÷
-		//cal_Year* headptr;  //¿¬µµ headptr
-		map<int, cal_Year*> year_headptr; //¿¬µµ headptr
-		int tasks_count = 0;  //´©Àû ÀÏÁ¤ °³¼ö (ÀÌ°Ô ÀÏÁ¤ÀÇ °íÀ¯¹øÈ£°¡ µÊ)
-		Scheduler* S;  //½ºÄÉÁÙ·¯
+		vector<int> queued; //ì¼ì •ì— í• ë‹¹ ëœ ì‘ì—…
+		vector<int> failed;  //ì¼ì • í• ë‹¹ì— ì‹¤íŒ¨í•œ ì‘ì—…
+		vector<int> finished;  //ëë‚œ ì¼ì •
+		map<int, Task*> allTasks;  //ëª¨ë“  ì‘ì—…
+		//cal_Year* headptr;  //ì—°ë„ headptr
+		map<int, cal_Year*> year_headptr; //ì—°ë„ headptr
+		int tasks_count = 0;  //ëˆ„ì  ì¼ì • ê°œìˆ˜ (ì´ê²Œ ì¼ì •ì˜ ê³ ìœ ë²ˆí˜¸ê°€ ë¨)
+		Scheduler* S;  //ìŠ¤ì¼€ì¤„ëŸ¬
 
 		typedef struct _stats {
-			int finished_count; //¿Ï·áÇÑ ÀÛ¾÷
-			int unfinished_count;  //¿Ï·áÇÏÁö ¸øÇÑ ÀÛ¾÷
-			int to_do_count;  //¾ÕÀ¸·Î ³²Àº ÀÛ¾÷ÀÇ °³¼ö
-			int tasktypes[100];   //ÀÛ¾÷ÀÇ Á¾·ù¸¦ ÀúÀåÇÏ´Â ¹è¿­
-		} calStats;   //Åë°è ÀúÀå
+			int finished_count; //ì™„ë£Œí•œ ì‘ì—…
+			int unfinished_count;  //ì™„ë£Œí•˜ì§€ ëª»í•œ ì‘ì—…
+			int to_do_count;  //ì•ìœ¼ë¡œ ë‚¨ì€ ì‘ì—…ì˜ ê°œìˆ˜
+			int tasktypes[100];   //ì‘ì—…ì˜ ì¢…ë¥˜ë¥¼ ì €ì¥í•˜ëŠ” ë°°ì—´
+		} calStats;   //í†µê³„ ì €ì¥
 
 
 		calStats stat = { 0,0,0,{0, } };
@@ -139,7 +139,7 @@ namespace scheduler {
 		bool get_Month(vector<Task*> & tasks, int year, int month, int day);
 		calStats getStatistics();
 
-		bool changeInterval(int interval, vector<Task*> & queued, vector<Task*> & failed);  //»õ·Î¿î queuedÇÏ°í failed ¹İÈ¯ÇØÁÜ.
+		bool changeInterval(int interval, vector<Task*> & queued, vector<Task*> & failed);  //ìƒˆë¡œìš´ queuedí•˜ê³  failed ë°˜í™˜í•´ì¤Œ.
 
 	};
 }

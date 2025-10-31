@@ -9,7 +9,7 @@ using namespace std;
 
 namespace scheduler {
 
-	//task °ü·Ã
+	//task ê´€ë ¨
 	Task::Task(string name, int enddate, int duration, int type, int taskNum) {
 		this->name = name;
 		this->enddate = enddate;
@@ -52,7 +52,7 @@ namespace scheduler {
 
 
 	///////////////////////////////////
-	//cal Year °ü·Ã
+	//cal Year ê´€ë ¨
 	cal_Month* cal_Year::get_Month(int month){
 		if (this->month_headptr.find(month) == this->month_headptr.end())
 			return nullptr;
@@ -68,7 +68,7 @@ namespace scheduler {
 			return;
 		}
 
-		this->month_headptr[month] = new cal_Month(this->year, month); //¼öÁ¤ÇÏ±â
+		this->month_headptr[month] = new cal_Month(this->year, month); //ìˆ˜ì •í•˜ê¸°
 
 	}
 
@@ -78,7 +78,7 @@ namespace scheduler {
 
 
 	////////////////////////////////////////////////
-	//cal Month °ü·Ã
+	//cal Month ê´€ë ¨
 	cal_Day* cal_Month::get_Day(int day) {
 		if (this->day_headptr.find(day) == this->day_headptr.end()) {
 			return nullptr;
@@ -107,7 +107,7 @@ namespace scheduler {
 
 
 	///////////////////////////////////////////////
-	//cal Day °ü·Ã
+	//cal Day ê´€ë ¨
 
 	void cal_Day::insert_Task(int tasknum, Task* task) {
 		LinkedList::insert_tail(this->Task_headptr, task);
@@ -137,7 +137,7 @@ namespace scheduler {
 	}
 
 	//////////////////////////////////
-	//Calender°ü·Ã
+	//Calenderê´€ë ¨
 
 	//private:
 
@@ -145,7 +145,7 @@ namespace scheduler {
 		std::time_t now_utc = std::time(nullptr);
 		std::time_t kst_epoch = now_utc + 9 * 60 * 60; // UTC+9
 
-		// gmtimeÀº static tm*¸¦ ¹İÈ¯ÇÏ¹Ç·Î Áï½Ã º¹»çÇØ¼­ »ç¿ë
+		// gmtimeì€ static tm*ë¥¼ ë°˜í™˜í•˜ë¯€ë¡œ ì¦‰ì‹œ ë³µì‚¬í•´ì„œ ì‚¬ìš©
 		std::tm tm = *std::gmtime(&kst_epoch);
 
 		year = tm.tm_year + 1900;
@@ -155,20 +155,20 @@ namespace scheduler {
 		minute = tm.tm_min;       // 0..59
 	}
 
-	void Calender::get_first_day_of_week(int &year, int &month, int &day) {  //chatgpt È°¿ë
+	void Calender::get_first_day_of_week(int &year, int &month, int &day) {  //chatgpt í™œìš©
 		tm tm{};
 		tm.tm_year = year - 1900;
 		tm.tm_mon = month - 1;   // 0..11
 		tm.tm_mday = day;
-		tm.tm_hour = 12;      // DST/Å¸ÀÓÁ¸ ¿µÇâ ÃÖ¼ÒÈ­ (ÇÑ³·À¸·Î ¼³Á¤)
+		tm.tm_hour = 12;      // DST/íƒ€ì„ì¡´ ì˜í–¥ ìµœì†Œí™” (í•œë‚®ìœ¼ë¡œ ì„¤ì •)
 
-		// ³¯Â¥ Á¤±ÔÈ­ + ¿äÀÏ Ã¤¿ì±â (tm_wday: 0=Sun..6=Sat)
+		// ë‚ ì§œ ì •ê·œí™” + ìš”ì¼ ì±„ìš°ê¸° (tm_wday: 0=Sun..6=Sat)
 		if (std::mktime(&tm) == -1) return;
 
 		int wday = tm.tm_wday;                       // 0..6
-		int offset = (7 + wday - 1) % 7;      // µÇµ¹¾Æ°¥ ÀÏ¼ö
+		int offset = (7 + wday - 1) % 7;      // ë˜ëŒì•„ê°ˆ ì¼ìˆ˜
 
-		tm.tm_mday -= offset;                          // ÁÖ ½ÃÀÛÀ¸·Î ÀÌµ¿
+		tm.tm_mday -= offset;                          // ì£¼ ì‹œì‘ìœ¼ë¡œ ì´ë™
 		if (std::mktime(&tm) == -1) return;
 
 		year = tm.tm_year + 1900;
@@ -196,7 +196,7 @@ namespace scheduler {
 		return;
 	}
 
-	cal_Day* Calender::find(int date) {   //20251010 Çü½ÄÀÇ ³¯À» Ã£±â
+	cal_Day* Calender::find(int date) {   //20251010 í˜•ì‹ì˜ ë‚ ì„ ì°¾ê¸°
 		int curYear = date / 1000000;
 		int curMonth = (date % 10000) / 100;
 		int curDay = date % 100;
@@ -209,7 +209,7 @@ namespace scheduler {
 		return tempM->get_Day(curDay);
 	}
 
-	cal_Day* Calender::newDay(int date) {   //20251010 Çü½ÄÀÇ ³¯À» ¸¸µé°í ¹İÈ¯.
+	cal_Day* Calender::newDay(int date) {   //20251010 í˜•ì‹ì˜ ë‚ ì„ ë§Œë“¤ê³  ë°˜í™˜.
 		int curYear = date / 1000000;
 		int curMonth = (date % 10000) / 100;
 		int curDay = date % 100;
@@ -232,13 +232,13 @@ namespace scheduler {
 		return newM->get_Day(curDay);
 	}
 
-	void Calender::refreshCal() {   //½Ã°£¿¡ µû¸¥ calender °»½Å
+	void Calender::refreshCal() {   //ì‹œê°„ì— ë”°ë¥¸ calender ê°±ì‹ 
 		int year, month, day, hour, minute;
 		get_current_time(year, month, day, hour, minute);
 		long long curtime = minute + hour * 100 + day * 10000 + month * 1000000 + year * 100000000;
 		int curtime_2 = day + month * 100 + year * 10000;
 		vector<Task*> newq, newf;
-		//1. ¸ÕÀú queue¿¡ ÀÖ´Â ÀÛ¾÷ ¿Ï·á Ç¥½Ã, ¿Ï·á ¾ÈµÈ°ÍÀº newq¿¡ push
+		//1. ë¨¼ì € queueì— ìˆëŠ” ì‘ì—… ì™„ë£Œ í‘œì‹œ, ì™„ë£Œ ì•ˆëœê²ƒì€ newqì— push
 		for (int cur : queued) {
 			long long starttime, endtime;
 			allTasks[cur]->getTime(starttime, endtime);
@@ -249,7 +249,7 @@ namespace scheduler {
 			newq.push_back(allTasks[cur]);
 		}
 
-		//2. failed¿¡ ÀÖ´Â °Í Áß enddate°¡ ¾ÈÁö³­°Í¸¸ ³²±â±â
+		//2. failedì— ìˆëŠ” ê²ƒ ì¤‘ enddateê°€ ì•ˆì§€ë‚œê²ƒë§Œ ë‚¨ê¸°ê¸°
 		for (int cur : failed) {
 			int enddate = allTasks[cur]->getEndDate();
 			if (enddate > curtime_2) continue;
@@ -263,10 +263,10 @@ namespace scheduler {
 
 
 	void Calender::remakeCal(vector<Task*>& newq, vector<Task*>& newf) {
-		//0. ½ºÄÉÁÙ ´Ù½Ã ¸¸µé±â
+		//0. ìŠ¤ì¼€ì¤„ ë‹¤ì‹œ ë§Œë“¤ê¸°
 		S->makeSchedule(newq, newf);
 		
-		//1. ÀÌÀü¿¡ ÇÒ´çÇÑ ÀÛ¾÷ ÇØÁ¦  (ÃÖÀûÈ­ ÇÊ¿ä)
+		//1. ì´ì „ì— í• ë‹¹í•œ ì‘ì—… í•´ì œ  (ìµœì í™” í•„ìš”)
 		for (int cur : queued) {
 			long long starttime, endtime;
 			allTasks[cur]->getTime(starttime, endtime);
@@ -276,7 +276,7 @@ namespace scheduler {
 			curday->freeTaskNum(cur);
 		}
 
-		//2. »õ·Î¿î ÀÛ¾÷ ÇÒ´ç
+		//2. ìƒˆë¡œìš´ ì‘ì—… í• ë‹¹
 		for (Task* newtask : newq) {
 			int tasknum = newtask->getTaskNum();
 			long long starttime, endtime;
@@ -291,7 +291,7 @@ namespace scheduler {
 			tempD->insert_Task(tasknum, newtask);
 		}
 
-		//3. Calender queue, failed °»½Å
+		//3. Calender queue, failed ê°±ì‹ 
 		queued.clear(); failed.clear();
 		for (Task* cur : newq) queued.push_back(cur->getTaskNum());
 		for (Task* cur : newf) failed.push_back(cur->getTaskNum());
@@ -304,13 +304,13 @@ namespace scheduler {
 	//public:
 
 	Calender::Calender() {
-		this->S = new Scheduler(); //½ºÄÉÁÙ·¯ »ı¼º
+		this->S = new Scheduler(); //ìŠ¤ì¼€ì¤„ëŸ¬ ìƒì„±
 	}
 
 	bool Calender::addTask(string name, int dur, int duedate, int type) {
-		refreshCal();   //¸ÕÀú ½Ã°£Â÷¿¡ µû¸¥ Ä¶¸°´õ °»½Å
+		refreshCal();   //ë¨¼ì € ì‹œê°„ì°¨ì— ë”°ë¥¸ ìº˜ë¦°ë” ê°±ì‹ 
 		/*
-			1. task ¸¸µé±â
+			1. task ë§Œë“¤ê¸°
 			2. refresh cal
 		
 		*/
@@ -331,9 +331,9 @@ namespace scheduler {
 		return true;
 	}
 
-	bool Calender::deleteTask(int taskNum) {   //¹Ì¿Ï·á ÀÏÁ¤¿¡ ´ëÇØ¼­ »èÁ¦ ÁøÇà
+	bool Calender::deleteTask(int taskNum) {   //ë¯¸ì™„ë£Œ ì¼ì •ì— ëŒ€í•´ì„œ ì‚­ì œ ì§„í–‰
 		refreshCal();
-		//1. ÀÌ¹Ì ³¡³­ ÀÏ
+		//1. ì´ë¯¸ ëë‚œ ì¼
 		if (allTasks[taskNum]->isfinished()) {
 			long long starttime, endtime;
 			allTasks[taskNum]->getTime(starttime, endtime);
@@ -344,7 +344,7 @@ namespace scheduler {
 			return true;
 		}
 
-		//2. ¾ÆÁ÷ ¾È³¡³­ ÀÏ
+		//2. ì•„ì§ ì•ˆëë‚œ ì¼
 		else {
 			vector<Task*> newq, newf;
 			for (int cur : queued) {
@@ -363,7 +363,7 @@ namespace scheduler {
 
 	bool Calender::editTask(int taskNum, string name, int dur, int duedate, int type) {
 		if (allTasks.find(taskNum) == allTasks.end()) {
-			cout << "edit Task: no task \n";    //µğ¹ö±ë ÄÚµå
+			cout << "edit Task: no task \n";    //ë””ë²„ê¹… ì½”ë“œ
 			return false;
 		}
 
@@ -381,7 +381,7 @@ namespace scheduler {
 
 	}
 
-	void Calender::markFinished(int taskNum) {  //ÀÏ´Ü ¸¶Å·¸¸ ½ÃÇà
+	void Calender::markFinished(int taskNum) {  //ì¼ë‹¨ ë§ˆí‚¹ë§Œ ì‹œí–‰
 		allTasks[taskNum]->done();
 		return;
 	}
@@ -398,7 +398,7 @@ namespace scheduler {
 
 	}
 
-	bool Calender::get_Week(vector<Task*> & tasks, int year, int month, int day) {   //ÇöÀç ³¯Â¥ ±âÁØÀ¸·Î Ã¹ ÁÖÀÇ ³¯Â¥ (¿ù~ÀÏ)
+	bool Calender::get_Week(vector<Task*> & tasks, int year, int month, int day) {   //í˜„ì¬ ë‚ ì§œ ê¸°ì¤€ìœ¼ë¡œ ì²« ì£¼ì˜ ë‚ ì§œ (ì›”~ì¼)
 		get_first_day_of_week(year, month, day);
 
 		for (int i = 0; i < 7; i++) {
@@ -421,7 +421,7 @@ namespace scheduler {
 		if (curM == nullptr) return false;
 		cal_Day* curD = nullptr;
 
-		for (int i = 1; i <= 31; i++) {   //¸ğµç ³¯ ¼øÈ¸ÇÏ±â
+		for (int i = 1; i <= 31; i++) {   //ëª¨ë“  ë‚  ìˆœíšŒí•˜ê¸°
 			curD = curM->get_Day(i);
 			if (curD == nullptr) continue;
 			vector<Task*> tempv = curD->get_Tasks();

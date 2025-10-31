@@ -1,91 +1,192 @@
 #include "Priority_queue.h"
-#include <utility> // std::swap을 사용하기 위해 포함
+#include <queue>
+
 
 namespace scheduler {
+    HeapNode* PriorityQueue::find_insertion_point() {
+        if (!root) return nullptr;
 
-// --- Private Helper Functions ---
+        std::queue<HeapNode*> q;
+        q.push(root);
 
-// 특정 노드(index)의 값이 부모 노드보다 우선순위가 높을 경우, 위로 올리는 작업을 반복합니다.
-// 저희의 우선순위는 '마감일이 더 빠른 것'입니다. (min-heap)
-void PriorityQueue::heapify_up(int index) {
-    // 루트 노드(index 0)에 도달하거나, 부모보다 우선순위가 낮아질 때까지 반복
-    while (index > 0) {
-        int parent_index = (index - 1) / 2;
+        while (!q.empty()) {
+            HeapNode* current = q.front();
+            q.pop();
 
-        // 자식의 마감일이 부모의 마감일보다 빠르면(우선순위가 높으면) 위치를 교체
-        if (heap[index]->getEndDate() < heap[parent_index]->getEndDate()) {
-            std::swap(heap[index], heap[parent_index]);
-            index = parent_index; // 인덱스를 부모 위치로 변경하고 계속 진행
-        } else {
-            // 부모보다 우선순위가 낮으면 제자리를 찾은 것이므로 종료
-            break;
+            if (current->getLeft() == nullptr || current->getRight() == nullptr) {
+                return current;
+            }
+
+            if (current->getLeft()) q.push(current->getLeft());
+            if (current->getRight()) q.push(current->getRight());
+        }
+        return nullptr;
+    }
+
+    HeapNode* PriorityQueue::find_last_node() {
+        if (!root) return nullptr;
+
+        // 루트부터 BFS를 수행.
+        std::queue<HeapNode*> q;
+        q.push(root);
+        HeapNode* last = root;
+
+        while (!q.empty()) {
+            last = q.front();
+            q.pop();
+
+            if (last->getLeft()) q.push(last->getLeft());
+            if (last->getRight()) q.push(last->getRight());
+        }
+        return last;
+    }
+ 
+    void PriorityQueue::heapify_up(HeapNode* node) {
+        if (!node || !node->getParent()) return;
+
+        HeapNode* current = node;
+        HeapNode* parent = current->getParent();
+
+        while (parent && current->getTask()->getEndDate() < parent->getTask()->getEndDate()) {
+
+            // Task 데이터(포인터)만 교환
+            Task* temp = current->getTask();
+            current->setTask(parent->getTask());
+            parent->setTask(temp);
+
+            // 다음 레벨
+            current = parent;
+            parent = current->getParent();
         }
     }
-}
 
-// 특정 노드(index)의 값이 자식 노드보다 우선순위가 낮을 경우, 아래로 내리는 작업을 반복합니다.
-void PriorityQueue::heapify_down(int index) {
-    int left_child_index;
-    int right_child_index;
-    int smaller_child_index;
+    //  힙 속성 복원
+    void PriorityQueue::heapify_down(HeapNode* node) {
+        if (!node) return;
 
-    // 자식 노드가 있는 동안 계속 반복
-    while ((left_child_index = (2 * index) + 1) < heap.size()) {
-        smaller_child_index = left_child_index; // 일단 왼쪽 자식이 더 작다고 가정
-        right_child_index = (2 * index) + 2;
+        HeapNode* current = node;
+        HeapNode* smaller_child;
 
-        // 오른쪽 자식이 존재하고, 오른쪽이 왼쪽보다 더 우선순위가 높으면(마감일이 빠르면)
-        if (right_child_index < heap.size() && heap[right_child_index]->getEndDate() < heap[left_child_index]->getEndDate()) {
-            smaller_child_index = right_child_index;
+        while (true) {
+            HeapNode* left = current->getLeft();
+            HeapNode* right = current->getRight();
+            smaller_child = nullptr;
+
+            if (left && right) {
+                if (left->getTask()->getEndDate() < right->getTask()->getEndDate()) {
+                    smaller_child = left;
+                }
+                else {
+                    smaller_child = right;
+                }
+            }
+            else if (left) {
+                smaller_child = left;
+            }
+            else if (right) {
+                smaller_child = right;
+            }
+
+            if (smaller_child && smaller_child->getTask()->getEndDate() < current->getTask()->getEndDate()) {
+
+                // Task 데이터(포인터) 교환
+                scheduler::Task* temp = current->getTask();
+                current->setTask(smaller_child->getTask());
+                smaller_child->setTask(temp);
+
+                // 다음 레벨로 이동
+                current = smaller_child;
+            }
+            else {
+                break;
+            }
+        }
+    }
+
+    void PriorityQueue::push(scheduler::Task* task) {
+        HeapNode* newNode = new HeapNode(task);
+
+        if (size == 0) {
+            root = newNode;
+            size = 1;
+            return;
         }
 
-        // 현재 노드가 더 작은 자식보다 우선순위가 낮으면(마감일이 늦으면) 위치 교체
-        if (heap[index]->getEndDate() > heap[smaller_child_index]->getEndDate()) {
-            std::swap(heap[index], heap[smaller_child_index]);
-            index = smaller_child_index; // 인덱스를 자식 위치로 변경하고 계속 진행
-        } else {
-            // 자식보다 우선순위가 높으면 제자리를 찾은 것이므로 종료
-            break;
+        // 1. O(N)
+        HeapNode* parent = find_insertion_point();
+
+        // 2. 새 노드 연결
+        newNode->setParent(parent);
+        if (parent->getLeft() == nullptr) {
+            parent->setLeft(newNode);
+        }
+        else {
+            parent->setRight(newNode);
+        }
+        size++;
+
+        // 3. O(logN): 힙 속성 복원
+        heapify_up(newNode);
+    }
+
+    void PriorityQueue::pop() {
+        if (size == 0) return;
+
+        if (size == 1) {
+            delete root;
+            root = nullptr;
+            size = 0;
+            return;
+        }
+
+        // 1. O(N)
+        HeapNode* lastNode = find_last_node();
+
+        root->setTask(lastNode->getTask());
+
+        HeapNode* parent = lastNode->getParent(); // 연결 후 해제
+        if (parent->getLeft() == lastNode) {
+            parent->setLeft(nullptr);
+        }
+        else {
+            parent->setRight(nullptr);
+        }
+
+        delete lastNode;
+        size--;
+
+        if (root) {
+            heapify_down(root);
         }
     }
-}
 
-
-// --- Public Member Functions ---
-
-void PriorityQueue::push(Task* task) {
-    // 1. 데이터를 벡터의 맨 끝에 추가합니다.
-    heap.push_back(task);
-    // 2. 맨 끝 노드부터 시작해서, 제자리를 찾아 위로 올립니다(heapify_up).
-    heapify_up(heap.size() - 1);
-}
-
-void PriorityQueue::pop() {
-    if (empty()) {
-        return;
+    scheduler::Task* PriorityQueue::front() {
+        return (size == 0) ? nullptr : root->getTask();
     }
 
-    // 1. 루트 노드(가장 우선순위 높은)와 마지막 노드를 교체합니다.
-    std::swap(heap[0], heap.back());
-    // 2. 원래 루트였던 마지막 노드를 벡터에서 제거합니다.
-    heap.pop_back();
-
-    // 3. 바뀐 루트 노드를 제자리로 찾아 아래로 내립니다(heapify_down).
-    if (!empty()) {
-        heapify_down(0);
+    bool PriorityQueue::empty() const {
+        return size == 0;
     }
-}
 
-Task* PriorityQueue::front() {
-    return empty() ? nullptr : heap.front();
-}
+-    void PriorityQueue::clear() {
+        if (!root) return;
 
-void PriorityQueue::clear() {
-    heap.clear();
-}
+        // BFS를 사용하여 모든 노드를 순회하며 메모리 해제
+        std::queue<HeapNode*> q;
+        q.push(root);
 
-bool PriorityQueue::empty() const {
-    return heap.empty();
-}
+        while (!q.empty()) {
+            HeapNode* current = q.front();
+            q.pop();
 
-} // namespace scheduler
+            if (current->getLeft()) q.push(current->getLeft());
+            if (current->getRight()) q.push(current->getRight());
+
+            delete current;
+        }
+
+        root = nullptr;
+        size = 0;
+    }
+
+} 
