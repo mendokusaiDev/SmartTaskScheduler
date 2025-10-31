@@ -1,0 +1,79 @@
+﻿  HeapNode.cpp
+C:\Users\hajac\source\repos\SmartTaskScheduler\Smart Task Scheduler\Priority_queue.h(10,11): error C2143: 구문 오류: ';'이(가) '<' 앞에 없습니다.
+  (소스 파일 'HeapNode.cpp'을(를) 컴파일하는 중)
+  
+C:\Users\hajac\source\repos\SmartTaskScheduler\Smart Task Scheduler\Priority_queue.h(10,5): error C4430: 형식 지정자가 없습니다. int로 가정합니다. 참고: C++에서는 기본 int를 지원하지 않습니다.
+  (소스 파일 'HeapNode.cpp'을(를) 컴파일하는 중)
+  
+C:\Users\hajac\source\repos\SmartTaskScheduler\Smart Task Scheduler\Priority_queue.h(10,23): error C2238: ';' 앞에 예기치 않은 토큰이 있습니다.
+  (소스 파일 'HeapNode.cpp'을(를) 컴파일하는 중)
+  
+C:\Users\hajac\source\repos\SmartTaskScheduler\Smart Task Scheduler\Priority_queue.h(18,15): error C2061: 구문 오류: 식별자 'Task'
+  (소스 파일 'HeapNode.cpp'을(를) 컴파일하는 중)
+  
+C:\Users\hajac\source\repos\SmartTaskScheduler\Smart Task Scheduler\Priority_queue.h(21,9): error C2143: 구문 오류: ';'이(가) '*' 앞에 없습니다.
+  (소스 파일 'HeapNode.cpp'을(를) 컴파일하는 중)
+  
+C:\Users\hajac\source\repos\SmartTaskScheduler\Smart Task Scheduler\Priority_queue.h(21,5): error C4430: 형식 지정자가 없습니다. int로 가정합니다. 참고: C++에서는 기본 int를 지원하지 않습니다.
+  (소스 파일 'HeapNode.cpp'을(를) 컴파일하는 중)
+  
+C:\Users\hajac\source\repos\SmartTaskScheduler\Smart Task Scheduler\Priority_queue.h(21,18): error C2238: ';' 앞에 예기치 않은 토큰이 있습니다.
+  (소스 파일 'HeapNode.cpp'을(를) 컴파일하는 중)
+  
+C:\Users\hajac\source\repos\SmartTaskScheduler\Smart Task Scheduler\Scheduler.h(15,21): error C2061: 구문 오류: 식별자 'vector'
+  (소스 파일 'HeapNode.cpp'을(를) 컴파일하는 중)
+  
+C:\Users\hajac\source\repos\SmartTaskScheduler\Smart Task Scheduler\Node.h(7,7): error C2143: 구문 오류: ';'이(가) '*' 앞에 없습니다.
+  (소스 파일 'HeapNode.cpp'을(를) 컴파일하는 중)
+  
+C:\Users\hajac\source\repos\SmartTaskScheduler\Smart Task Scheduler\Node.h(7,3): error C4430: 형식 지정자가 없습니다. int로 가정합니다. 참고: C++에서는 기본 int를 지원하지 않습니다.
+  (소스 파일 'HeapNode.cpp'을(를) 컴파일하는 중)
+  
+C:\Users\hajac\source\repos\SmartTaskScheduler\Smart Task Scheduler\Node.h(7,13): error C2238: ';' 앞에 예기치 않은 토큰이 있습니다.
+  (소스 파일 'HeapNode.cpp'을(를) 컴파일하는 중)
+  
+C:\Users\hajac\source\repos\SmartTaskScheduler\Smart Task Scheduler\Node.h(13,16): error C2061: 구문 오류: 식별자 'Task'
+  (소스 파일 'HeapNode.cpp'을(를) 컴파일하는 중)
+  
+C:\Users\hajac\source\repos\SmartTaskScheduler\Smart Task Scheduler\Node.h(14,7): error C2143: 구문 오류: ';'이(가) '*' 앞에 없습니다.
+  (소스 파일 'HeapNode.cpp'을(를) 컴파일하는 중)
+  
+C:\Users\hajac\source\repos\SmartTaskScheduler\Smart Task Scheduler\Node.h(14,3): error C4430: 형식 지정자가 없습니다. int로 가정합니다. 참고: C++에서는 기본 int를 지원하지 않습니다.
+  (소스 파일 'HeapNode.cpp'을(를) 컴파일하는 중)
+  
+C:\Users\hajac\source\repos\SmartTaskScheduler\Smart Task Scheduler\Node.h(14,18): error C2238: ';' 앞에 예기치 않은 토큰이 있습니다.
+  (소스 파일 'HeapNode.cpp'을(를) 컴파일하는 중)
+  
+C:\Users\hajac\source\repos\SmartTaskScheduler\Smart Task Scheduler\Node.h(16,8): error C2061: 구문 오류: 식별자 'Task'
+  (소스 파일 'HeapNode.cpp'을(를) 컴파일하는 중)
+  
+C:\Users\hajac\source\repos\SmartTaskScheduler\Smart Task Scheduler\Calender.h(61,12): error C2065: 'cal_Month': 선언되지 않은 식별자입니다.
+  (소스 파일 'HeapNode.cpp'을(를) 컴파일하는 중)
+  
+C:\Users\hajac\source\repos\SmartTaskScheduler\Smart Task Scheduler\Calender.h(61,22): error C2059: 구문 오류: '>'
+  (소스 파일 'HeapNode.cpp'을(를) 컴파일하는 중)
+  
+C:\Users\hajac\source\repos\SmartTaskScheduler\Smart Task Scheduler\Calender.h(64,12): error C2143: 구문 오류: ';'이(가) '*' 앞에 없습니다.
+  (소스 파일 'HeapNode.cpp'을(를) 컴파일하는 중)
+  
+C:\Users\hajac\source\repos\SmartTaskScheduler\Smart Task Scheduler\Calender.h(64,3): error C4430: 형식 지정자가 없습니다. int로 가정합니다. 참고: C++에서는 기본 int를 지원하지 않습니다.
+  (소스 파일 'HeapNode.cpp'을(를) 컴파일하는 중)
+  
+C:\Users\hajac\source\repos\SmartTaskScheduler\Smart Task Scheduler\Calender.h(64,34): error C2238: ';' 앞에 예기치 않은 토큰이 있습니다.
+  (소스 파일 'HeapNode.cpp'을(를) 컴파일하는 중)
+  
+C:\Users\hajac\source\repos\SmartTaskScheduler\Smart Task Scheduler\Calender.h(73,12): error C2065: 'cal_Day': 선언되지 않은 식별자입니다.
+  (소스 파일 'HeapNode.cpp'을(를) 컴파일하는 중)
+  
+C:\Users\hajac\source\repos\SmartTaskScheduler\Smart Task Scheduler\Calender.h(73,20): error C2059: 구문 오류: '>'
+  (소스 파일 'HeapNode.cpp'을(를) 컴파일하는 중)
+  
+C:\Users\hajac\source\repos\SmartTaskScheduler\Smart Task Scheduler\Calender.h(76,10): error C2143: 구문 오류: ';'이(가) '*' 앞에 없습니다.
+  (소스 파일 'HeapNode.cpp'을(를) 컴파일하는 중)
+  
+C:\Users\hajac\source\repos\SmartTaskScheduler\Smart Task Scheduler\Calender.h(76,3): error C4430: 형식 지정자가 없습니다. int로 가정합니다. 참고: C++에서는 기본 int를 지원하지 않습니다.
+  (소스 파일 'HeapNode.cpp'을(를) 컴파일하는 중)
+  
+C:\Users\hajac\source\repos\SmartTaskScheduler\Smart Task Scheduler\Calender.h(76,28): error C2238: ';' 앞에 예기치 않은 토큰이 있습니다.
+  (소스 파일 'HeapNode.cpp'을(를) 컴파일하는 중)
+  
