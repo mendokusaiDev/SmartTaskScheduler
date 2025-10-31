@@ -1,7 +1,8 @@
 #pragma once
-#include "Calender.h"
 #include "HeapNode.h"
+#include <queue>
 
+class scheduler::Task;
 
 namespace scheduler {
 

@@ -1,5 +1,4 @@
 #include "Priority_queue.h"
-#include <queue>
 
 
 namespace scheduler {
@@ -168,7 +167,7 @@ namespace scheduler {
         return size == 0;
     }
 
--    void PriorityQueue::clear() {
+    void PriorityQueue::clear() {
         if (!root) return;
 
         // BFS를 사용하여 모든 노드를 순회하며 메모리 해제

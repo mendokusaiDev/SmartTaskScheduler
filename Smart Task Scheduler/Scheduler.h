@@ -1,5 +1,8 @@
 #pragma once
 #include "Priority_queue.h"
+#include <vector>
+
+class scheduler::PriorityQueue;
 
 namespace scheduler {
 
@@ -12,6 +15,6 @@ namespace scheduler {
 	public:
 		PriorityQueue* q;
 		bool ChangeInterval(int time);
-		void makeSchedule(vector<Task*>& original, vector<Task*>& failed);
+		void makeSchedule(std::vector<Task*> & original, std::vector<Task*> & failed);
 	};
 }
