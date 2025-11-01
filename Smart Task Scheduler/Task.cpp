@@ -4,7 +4,7 @@ using namespace scheduler;
 
 namespace scheduler {
 	//task ฐüทร
-	Task::Task(std::string name, int enddate, int duration, int type, int taskNum) {
+	Task::Task(std::string name, long long enddate, long long duration, int type, int taskNum) {
 		this->name = name;
 		this->enddate = enddate;
 		this->duration = duration;
@@ -22,7 +22,7 @@ namespace scheduler {
 	}
 
 
-	void Task::changeTask(std::string name, int enddate, int duration, int type) {
+	void Task::changeTask(std::string name, long long enddate, long long duration, int type) {
 		this->name = name;
 		this->enddate = enddate;
 		this->duration = duration;
