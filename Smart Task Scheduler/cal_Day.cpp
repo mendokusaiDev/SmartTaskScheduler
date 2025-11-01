@@ -1,9 +1,9 @@
-#include "cal_Day.h"
+ï»¿#include "cal_Day.h"
 #include "LinkedList.h"
 
 namespace scheduler {
 	///////////////////////////////////////////////
-	//cal Day °ü·Ã
+	//cal Day Â°Ã¼Â·Ãƒ
 
 	void cal_Day::insert_Task(int tasknum, Task* task) {
 		LinkedList::insert_tail(this->Task_headptr, task);

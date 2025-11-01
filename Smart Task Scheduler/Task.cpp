@@ -1,9 +1,9 @@
-#include "Task.h"
+ï»¿#include "Task.h"
 
 using namespace scheduler;
 
 namespace scheduler {
-	//task °ü·Ã
+	//task Â°Ã¼Â·Ãƒ
 	Task::Task(std::string name, long long enddate, long long duration, int type, int taskNum) {
 		this->name = name;
 		this->enddate = enddate;

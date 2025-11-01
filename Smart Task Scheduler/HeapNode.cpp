@@ -1,5 +1,5 @@
-#include "HeapNode.h" 
-// »ı¼ºÀÚ, task, left, right, parent¿¡ ´ëÇÑ getter & setter
+ï»¿#include "HeapNode.h" 
+// ìƒì„±ì, task, left, right, parentì— ëŒ€í•œ getter & setter
 
 namespace scheduler
 {
