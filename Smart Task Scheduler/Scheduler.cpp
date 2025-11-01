@@ -3,10 +3,61 @@
 #include <vector>
 #include <iostream>
 
+#include<chrono>
+#include<ctime>
+
 namespace scheduler {
 
-// Scheduler.h에 선언된 PriorityQueue* q를 사용
-// 소멸자에서 메모리 해제를 처리해야 합니다.
+
+    namespace {
+
+        //max_day_of_month
+        static int max_day_of_month[13] = { 0,31,28,31,30,31,30,31,31,30,31,30,31 };
+        int get_max_day(int year, int month) {
+            if (month != 2) return max_day_of_month[month];
+            if (year % 100 == 0 && year % 400 != 0) return 28;
+            if (year % 4 == 0) return 29;
+            return 28;
+        }
+
+        // YYYY MM DD 
+        int addDaysToDate(int date_yyyymmdd, int duration) {
+            int year = date_yyyymmdd / 10000;
+            int month = (date_yyyymmdd % 10000) / 100;
+            int day = date_yyyymmdd % 100;
+
+            // duration이 0일인 경우(오늘 시작, 오늘 마감)를 대비해
+            for (int i = 0; i < duration; ++i) {
+                day++;
+                if (day > get_max_day(year, month)) {
+                    day = 1;
+                    month++;
+                    if (month > 12) {
+                        month = 1;
+                        year++;
+                    }
+                }
+            }
+            return day + month * 100 + year * 10000;
+        }
+
+        // Calender.cpp의 get_current_time 로직에서
+        // 날짜(YYYYMMDD) 부분만 정수로 반환하는 함수
+        int get_current_date_yyyymmdd() {
+            std::time_t now_utc = std::time(nullptr);
+            std::time_t kst_epoch = now_utc + 9 * 60 * 60; // UTC+9
+            std::tm tm = *std::gmtime(&kst_epoch);
+
+            int year = tm.tm_year + 1900;
+            int month = tm.tm_mon + 1;
+            int day = tm.tm_mday;
+
+            return day + month * 100 + year * 10000;
+        }
+
+    }
+    //익명 namespace 추가 부분 종료 시점
+    
 void Scheduler::makeSchedule(std::vector<Task*>& original, std::vector<Task*>& failed) {
     // q 포인터가 초기화되지 않았다면 생성
     if (!q) {
@@ -20,8 +71,9 @@ void Scheduler::makeSchedule(std::vector<Task*>& original, std::vector<Task*>& f
         q->push(task);
     }
 
-    // 스케줄링을 위한 가상 시간 (0부터 시작)
-    int currentTime = 0; 
+    // 스케줄링을 위한 가상 시간  -> get_current_date_yyyymmdd()호출
+    int currentTime = get_current_date_yyyymmdd();
+
     std::vector<Task*> scheduledTasks; // 성공한 작업을 임시로 저장할 벡터
     
     // 큐가 빌 때까지 반복합니다.
@@ -34,8 +86,8 @@ void Scheduler::makeSchedule(std::vector<Task*>& original, std::vector<Task*>& f
         int taskDuration = currentTask->getDuration(); 
         int taskEndDate = currentTask->getEndDate();   
 
-        // 현재 시간부터 작업을 수행했을 때의 예상 종료 시간
-        int estimatedEndTime = currentTime + taskDuration;
+        // 단순 덧셈 -> 날짜 계산으로 수정
+        int estimatedEndTime = addDaysToDate(currentTime, taskDuration);
 
         // 마감일 내에 작업을 완료할 수 있는지 확인합니다.
         if (estimatedEndTime <= taskEndDate) {
@@ -54,9 +106,8 @@ void Scheduler::makeSchedule(std::vector<Task*>& original, std::vector<Task*>& f
     // 성공한 작업 목록으로 original 벡터를 덮어씁니다.
     original = scheduledTasks;
     
-    // 진행 상황을 확인하기 위한 콘솔 출력
-    std::cout << "Scheduling complete using Priority Queue." << std::endl;
-    std::cout << "Succeeded: " << original.size() << " tasks" << std::endl;
+    // 진행 상황을 확인하기 위한 콘솔 출력 -> real time base로 수정
+    std::cout << "Scheduling complete using Priority Queue (Real-Time Basis)." << std::endl;    std::cout << "Succeeded: " << original.size() << " tasks" << std::endl;
     std::cout << "Failed: " << failed.size() << " tasks" << std::endl;
 }
 
