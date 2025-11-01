@@ -1,9 +1,9 @@
 ﻿#pragma once
 #define _CRT_SECURE_NO_WARNINGS
 #include "Scheduler.h"
-#include "Node.h"
+//#include "Node.h"
 #include "cal_Year.h"
-#include "cal_Day.h"
+//#include "cal_Day.h"
 #include "Task.h"
 #include <map>
 #include <vector>
@@ -49,7 +49,9 @@ namespace scheduler {
 
 	public:
 		Calender();
-
+		~Calender();
+		void save();
+		void restore();
 		bool addTask(std::string name, long long dur, long long duedate, int type);
 		bool deleteTask(int taskNum);
 		bool editTask(int taskNum, std::string name, int dur, int duedate, int type);

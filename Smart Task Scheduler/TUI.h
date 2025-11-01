@@ -1,6 +1,6 @@
 ﻿#pragma once
 #include "Calender.h"
-
+#include <iostream>
 
 namespace scheduler {
 
@@ -26,6 +26,10 @@ namespace scheduler {
 		TUI() {
 			c = new Calender();
 		};
+		void atExit() {
+			c->save();
+			std::cout << "saved!" << std::endl;
+		}
 
 	};
 

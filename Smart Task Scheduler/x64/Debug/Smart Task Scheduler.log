@@ -1,1 +1,5 @@
-﻿  Smart Task Scheduler.vcxproj -> G:\Smart Task Scheduler\Smart Task Scheduler\x64\Debug\Smart Task Scheduler.exe
+﻿  TUI.cpp
+G:\Smart Task Scheduler\Smart Task Scheduler\Smart Task Scheduler\TUI.cpp(103,22): warning C4244: '초기화 중': '__int64'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+G:\Smart Task Scheduler\Smart Task Scheduler\Smart Task Scheduler\TUI.cpp(185,41): warning C4244: '인수': 'scheduler::ll'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+G:\Smart Task Scheduler\Smart Task Scheduler\Smart Task Scheduler\TUI.cpp(185,36): warning C4244: '인수': 'scheduler::ll'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  Smart Task Scheduler.vcxproj -> G:\Smart Task Scheduler\Smart Task Scheduler\x64\Debug\Smart Task Scheduler.exe
