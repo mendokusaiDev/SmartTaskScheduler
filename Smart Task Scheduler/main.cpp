@@ -1,9 +1,17 @@
 ﻿#include "TUI.h"
+#include <cstdlib>
+
+scheduler::TUI app;
+
+void whenExit() {
+	app.atExit();
+	return;
+}
+
 
 int main() {
 
-	scheduler::TUI app;
-
+	atexit(whenExit);
 	app.mainMenu();
 
 	return 0;

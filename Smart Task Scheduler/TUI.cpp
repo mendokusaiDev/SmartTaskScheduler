@@ -6,6 +6,7 @@
 #include <vector>
 #include <ctime>
 #include <limits>
+#include <string>
 
 using namespace std;
 using scheduler::Task;
@@ -42,13 +43,22 @@ namespace scheduler {
         if ((y % 400 == 0) || (y % 4 == 0 && y % 100 != 0)) return 29; return 28;
     }
 
-    static void printTaskLine(Task* t) {
+    static void printTaskLine(Task* t) {   //gettype 수정하기
         long long s, e; t->getTime(s, e);
+        string due;
+        int y, m, d, hh, mm;
+        splitTime(t->getEndDate(), y, m, d, hh, mm);
+        due += to_string(y); due += "년 ";
+        due += to_string(m); due += "월 ";
+        due += to_string(d); due += "일 ";
+        due += to_string(hh); due += "시 ";
+        due += to_string(mm); due += "분 ";
         cout << "  [" << t->getTaskNum() << "] "
+            << t->getTaskName() << " "
             << (t->isfinished() ? "(완료) " : "")
             << hhmm(s) << " - " << hhmm(e)
             << "  | type=" << t->getType()
-            << "  | due=" << t->getEndDate() << "\n";
+            << "  | due=" << due << "\n";
     }
 
     // ---- TUI methods ----
