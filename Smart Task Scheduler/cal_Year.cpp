@@ -1,8 +1,8 @@
-#include "cal_Year.h"
+ï»¿#include "cal_Year.h"
 
 namespace scheduler {
 	///////////////////////////////////
-	//cal Year °ü·Ã
+	//cal Year ê´€ë ¨
 	cal_Month* cal_Year::get_Month(int month) {
 		if (this->month_headptr.find(month) == this->month_headptr.end())
 			return nullptr;
@@ -18,7 +18,7 @@ namespace scheduler {
 			return;
 		}
 
-		this->month_headptr[month] = new cal_Month(this->year, month); //¼öÁ¤ÇÏ±â
+		this->month_headptr[month] = new cal_Month(this->year, month); //ìˆ˜ì •í•˜ê¸°
 
 	}
 

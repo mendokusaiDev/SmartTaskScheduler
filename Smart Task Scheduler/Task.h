@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <string>
 //using namespace std;
 
@@ -6,14 +6,14 @@ namespace scheduler {
 
 	class Task {
 	private:
-		std::string name;  //ÀÌ¸§
-		long long enddate;   //¸¶°¨ ³¯Â¥ (³â¿ùÀÏ½ÃºĞ)
-		long long duration;  //¿¹»ó ¼Ò¿ä ½Ã°£
-		int type;      //ÀÛ¾÷ Á¾·ù
-		long long starttime;  //½ÃÀÛ ½Ã°£
-		long long endtime;    //³¡ ½Ã°£
-		int TaskNum;  //°íÀ¯ ÀÛ¾÷ ¹øÈ£
-		bool finished = 0; //¿Ï·á ¿©ºÎ
+		std::string name;  //ì´ë¦„
+		long long enddate;   //ë§ˆê° ë‚ ì§œ (ë…„ì›”ì¼ì‹œë¶„)
+		long long duration;  //ì˜ˆìƒ ì†Œìš” ì‹œê°„
+		int type;      //ì‘ì—… ì¢…ë¥˜
+		long long starttime;  //ì‹œì‘ ì‹œê°„
+		long long endtime;    //ë ì‹œê°„
+		int TaskNum;  //ê³ ìœ  ì‘ì—… ë²ˆí˜¸
+		bool finished = 0; //ì™„ë£Œ ì—¬ë¶€
 
 	public:
 		Task(std::string name, long long enddate, long long duration, int type, int taskNum);

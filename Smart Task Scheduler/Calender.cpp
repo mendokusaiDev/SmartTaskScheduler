@@ -1,4 +1,4 @@
-#include "Calender.h"
+﻿#include "Calender.h"
 
 
 namespace scheduler {
@@ -64,7 +64,7 @@ namespace scheduler {
 	}
 
 	cal_Day* Calender::find(int date) {   //20251010 형식의 날을 찾기
-		int curYear = date / 1000000;
+		int curYear = date / 10000;
 		int curMonth = (date % 10000) / 100;
 		int curDay = date % 100;
 		cal_Year* tempY; cal_Month* tempM;
@@ -77,7 +77,7 @@ namespace scheduler {
 	}
 
 	cal_Day* Calender::newDay(int date) {   //20251010 형식의 날을 만들고 반환.
-		int curYear = date / 1000000;
+		int curYear = date / 10000;
 		int curMonth = (date % 10000) / 100;
 		int curDay = date % 100;
 
@@ -102,7 +102,7 @@ namespace scheduler {
 	void Calender::refreshCal() {   //시간에 따른 calender 갱신
 		int year, month, day, hour, minute;
 		get_current_time(year, month, day, hour, minute);
-		long long curtime = minute + hour * 100 + day * 10000 + month * 1000000 + year * 100000000;
+		long long curtime = minute + hour * 100 + day * 10000 + month * 1000000LL + year * 100000000LL;
 		int curtime_2 = day + month * 100 + year * 10000;
 		std::vector<Task*> newq, newf;
 		//1. 먼저 queue에 있는 작업 완료 표시, 완료 안된것은 newq에 push
@@ -171,24 +171,24 @@ namespace scheduler {
 	//public:
 
 	Calender::Calender() {
-		this->S = new Scheduler(); //스케줄러 생성
+		this->S = new Scheduler(15); //스케줄러 생성
 	}
 
-	bool Calender::addTask(std::string name, int dur, int duedate, int type) {
+	bool Calender::addTask(std::string name, long long dur, long long duedate, int type) {
 		refreshCal();   //먼저 시간차에 따른 캘린더 갱신
 		/*
 			1. task 만들기
 			2. refresh cal
 		
 		*/
-
-		this->allTasks[this->tasks_count] = new Task(name, duedate, dur, type, tasks_count);
+		Task * t = new Task(name, duedate, dur, type, tasks_count);
+		this->allTasks[this->tasks_count] = t;
 		this->tasks_count++;
 
 		std::vector<Task*> tempq, tempf;
 		for (int ptr : queued) tempq.push_back(this->allTasks[ptr]);
 		for (int ptr : failed) tempq.push_back(this->allTasks[ptr]);
-
+		tempq.push_back(t);
 		//S->makeSchedule(tempq, tempf);
 
 		remakeCal(tempq, tempf);

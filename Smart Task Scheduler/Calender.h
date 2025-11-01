@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #define _CRT_SECURE_NO_WARNINGS
 #include "Scheduler.h"
 #include "Node.h"
@@ -50,7 +50,7 @@ namespace scheduler {
 	public:
 		Calender();
 
-		bool addTask(std::string name, int dur, int duedate, int type);
+		bool addTask(std::string name, long long dur, long long duedate, int type);
 		bool deleteTask(int taskNum);
 		bool editTask(int taskNum, std::string name, int dur, int duedate, int type);
 		void markFinished(int taskNum);

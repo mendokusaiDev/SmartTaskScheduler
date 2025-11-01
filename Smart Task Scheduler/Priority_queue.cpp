@@ -1,43 +1,62 @@
 #include "Priority_queue.h"
+#include <queue>
+#include<stack>
 
-
-namespace scheduler {
+namespace scheduler { // O(N) -> O(log N)
     HeapNode* PriorityQueue::find_insertion_point() {
-        if (!root) return nullptr;
+        std::stack<int> path;
 
-        std::queue<HeapNode*> q;
-        q.push(root);
+        unsigned int n = size + 1;
 
-        while (!q.empty()) {
-            HeapNode* current = q.front();
-            q.pop();
-
-            if (current->getLeft() == nullptr || current->getRight() == nullptr) {
-                return current;
-            }
-
-            if (current->getLeft()) q.push(current->getLeft());
-            if (current->getRight()) q.push(current->getRight());
+        while (n > 1)
+        {
+            path.push(n % 2);
+            n /= 2;
         }
-        return nullptr;
+
+        HeapNode* parent = root;
+
+        while (path.size() > 1)
+        {
+            int direction = path.top();
+            path.pop();
+
+            if (direction == 0) parent= parent->getLeft();
+            else parent = parent->getRight();
+        }
+        return parent;
     }
 
     HeapNode* PriorityQueue::find_last_node() {
-        if (!root) return nullptr;
+        if (size == 0) return nullptr;
 
-        // 루트부터 BFS를 수행.
-        std::queue<HeapNode*> q;
-        q.push(root);
-        HeapNode* last = root;
+        std::stack<int> path;
+        unsigned int n = size;
 
-        while (!q.empty()) {
-            last = q.front();
-            q.pop();
-
-            if (last->getLeft()) q.push(last->getLeft());
-            if (last->getRight()) q.push(last->getRight());
+        while (n > 1)
+        {
+            path.push(n % 2); // 0이면 왼쪽으로, 1이면 오른쪽으로
+            n /= 2;
         }
-        return last;
+
+        HeapNode* current = root;
+
+        while (!path.empty())
+        {
+            int direction = path.top();
+            path.pop();
+
+            if (direction == 0)
+            {
+                current = current->getLeft();
+            }
+            else
+            {
+                current = current->getRight();
+            }
+        }
+
+        return current;
     }
  
     void PriorityQueue::heapify_up(HeapNode* node) {

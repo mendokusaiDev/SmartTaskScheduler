@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "Task.h"
 #include "LinkedList.h"
 #include "Node.h"
@@ -11,9 +11,9 @@ namespace scheduler {
 
 	class cal_Day {
 	private:
-		int year; //¿¬µµ
-		int month;  //¿ù
-		int day;   //ÀÏ
+		int year; //Â¿Â¬ÂµÂµ
+		int month;  //Â¿Ã¹
+		int day;   //Ã€Ã
 		node* Task_headptr;
 
 	public:

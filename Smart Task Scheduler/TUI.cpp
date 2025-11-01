@@ -1,4 +1,4 @@
-#include "TUI.h"
+﻿#include "TUI.h"
 #include <iostream>
 #include <iomanip>
 #include <sstream>
@@ -13,6 +13,7 @@ using scheduler::Task;
 namespace scheduler {
 
     // ---- helpers ----
+    typedef long long ll;
     static int ymd(int y, int m, int d) { return y * 10000 + m * 100 + d; }
 
     static void splitTime(long long ymdhm, int& y, int& m, int& d, int& hh, int& mm) {
@@ -122,7 +123,7 @@ namespace scheduler {
             int yy, MM, dd, hh, mm;
             int key;
             if (s >= 0) { splitTime(s, yy, MM, dd, hh, mm); key = ymd(yy, MM, dd); }
-            else { key = t->getEndDate(); }
+            else { key = int(t->getEndDate() / 10000); } //무슨 용도지?
             byDate[key].push_back(t);
         }
         for (map<int, vector<Task*> >::iterator it = byDate.begin(); it != byDate.end(); ++it) {
@@ -149,12 +150,12 @@ namespace scheduler {
 
     // 작업 추가
     void TUI::addTask() {
-        string name; int dur, due, type;
+        string name; ll dur, due; int type;
         cout << "이름: ";
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
         getline(cin, name);
         cout << "예상소요(분): "; cin >> dur;
-        cout << "마감일(YYYYMMDD): "; cin >> due;
+        cout << "마감일(YYYYMMDDhhmm): "; cin >> due;
         cout << "타입(정수): "; cin >> type;
         if (c->addTask(name, dur, due, type))
             cout << "추가 완료\n";
@@ -163,13 +164,13 @@ namespace scheduler {
 
     // 작업 수정
     void TUI::editTask() {
-        int num; cout << "수정할 TaskNum: "; cin >> num;
-        string name; int dur, due, type;
+        int num; cout << "수정할 TaskNum: "; cin >> num;   //수정할 수 있는 task 목록을 출력
+        string name; ll dur, due; int type;
         cout << "새 이름: ";
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
         getline(cin, name);
-        cout << "새 소요(분): "; cin >> dur;
-        cout << "새 마감(YYYYMMDD): "; cin >> due;
+        cout << "새 소요(분): "; cin >> dur;  
+        cout << "새 마감(YYYYMMDDhhmm): "; cin >> due;
         cout << "새 타입: "; cin >> type;
         if (c->editTask(num, name, dur, due, type))
             cout << "수정 완료\n";
@@ -178,7 +179,7 @@ namespace scheduler {
 
     // 작업 삭제
     void TUI::deleteTask() {
-        int num; cout << "삭제할 TaskNum: "; cin >> num;
+        int num; cout << "삭제할 TaskNum: "; cin >> num;  //수정할 수 있는 task 목록 출력
         if (c->deleteTask(num))
             cout << "삭제 완료\n";
         else cout << "삭제 실패\n";

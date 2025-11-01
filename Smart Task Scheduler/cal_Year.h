@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "cal_Month.h"
 #include <iostream>
 #include <map>
@@ -11,7 +11,7 @@ namespace scheduler {
 
 	class cal_Year {
 	private:
-		int year;  //¿¬µµ
+		int year;  //Â¿Â¬ÂµÂµ
 		std::map<int, cal_Month*> month_headptr;
 
 	public:
