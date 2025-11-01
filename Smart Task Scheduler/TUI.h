@@ -1,5 +1,6 @@
-#pragma once
+﻿#pragma once
 #include "Calender.h"
+
 
 namespace scheduler {
 
@@ -22,6 +23,9 @@ namespace scheduler {
 
 	public:
 		void mainMenu();
+		TUI() {
+			c = new Calender();
+		};
 
 	};
 

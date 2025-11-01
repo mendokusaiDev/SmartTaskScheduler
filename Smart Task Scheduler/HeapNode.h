@@ -1,11 +1,11 @@
-#pragma once
-#include "Calender.h"
+﻿#pragma once
+#include "Task.h"
 
 namespace scheduler
 {
-    class HeapNode 
+    class HeapNode
     {
-    private :
+    private:
 
         Task* task;
         HeapNode* left_child;
@@ -15,12 +15,12 @@ namespace scheduler
 
     public:
 
-        HeapNode(scheduler::Task* t);
+        HeapNode(Task* t);
         Task* getTask() const;
         void setTask(Task* tast);
 
         HeapNode* getLeft() const;
-        void setLeft(HeapNode *hn);
+        void setLeft(HeapNode* hn);
 
         HeapNode* getRight() const;
         void setRight(HeapNode* hn);
@@ -28,4 +28,4 @@ namespace scheduler
         HeapNode* getParent() const;
         void setParent(HeapNode* hn);
     };
-}
+};

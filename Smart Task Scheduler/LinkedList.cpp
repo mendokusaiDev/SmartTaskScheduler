@@ -1,7 +1,5 @@
-#include "LinkedList.h"
-#include <iostream>
+﻿#include "LinkedList.h"
 
-using namespace std;
 
 namespace scheduler {
 
@@ -30,9 +28,9 @@ namespace scheduler {
 	}
 
 
-	vector<Task*> LinkedList::get_list(node* headptr) {
+	std::vector<Task*> LinkedList::get_list(node* headptr) {
 		node* cur = headptr;
-		vector<Task*> ret;
+		std::vector<Task*> ret;
 
 		while (cur != nullptr) {
 			ret.push_back(cur->getData());
@@ -61,7 +59,7 @@ namespace scheduler {
 		node* prev = headptr;
 
 		if (headptr == nullptr) {
-			cout << "error: headptr is null from deleteTask" << endl;
+			std::cout << "error: headptr is null from deleteTask" << std::endl;
 			return;
 		}
 
