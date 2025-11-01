@@ -15,25 +15,37 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="TUI.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="cal_Day.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="cal_Month.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="cal_Year.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
     <ClInclude Include="Calender.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Scheduler.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Priority_queue.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Node.h">
+    <ClInclude Include="HeapNode.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="LinkedList.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="TUI.h">
+    <ClInclude Include="Node.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="HeapNode.h">
+    <ClInclude Include="Priority_queue.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Scheduler.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Task.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
@@ -57,6 +69,21 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="HeapNode.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="cal_Day.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="cal_Month.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="cal_Year.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Task.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

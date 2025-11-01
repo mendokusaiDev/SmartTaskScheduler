@@ -1,5 +1,8 @@
 #pragma once
+#include "Task.h"
 #include "Calender.h"
+
+
 namespace scheduler {
 
 	class node {
@@ -12,7 +15,7 @@ namespace scheduler {
 		node* getLink();
 		void setData(Task* data);
 		Task* getData();
-		int get_tasknum();
+		int get_tasknum() { return task_num; }
 		node(Task * task, int task_num);
 	};
 }

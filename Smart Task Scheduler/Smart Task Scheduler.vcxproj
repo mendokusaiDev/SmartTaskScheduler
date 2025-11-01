@@ -20,20 +20,29 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Calender.h" />
+    <ClInclude Include="cal_Day.h" />
+    <ClInclude Include="cal_Month.h" />
+    <ClInclude Include="cal_Year.h" />
     <ClInclude Include="HeapNode.h" />
     <ClInclude Include="LinkedList.h" />
     <ClInclude Include="Node.h" />
     <ClInclude Include="Priority_queue.h" />
     <ClInclude Include="Scheduler.h" />
+    <ClInclude Include="Task.h" />
     <ClInclude Include="TUI.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Calender.cpp" />
+    <ClCompile Include="cal_Day.cpp" />
+    <ClCompile Include="cal_Month.cpp" />
+    <ClCompile Include="cal_Year.cpp" />
     <ClCompile Include="HeapNode.cpp" />
     <ClCompile Include="LinkedList.cpp" />
+    <ClCompile Include="main.cpp" />
     <ClCompile Include="Node.cpp" />
     <ClCompile Include="Priority_queue.cpp" />
     <ClCompile Include="Scheduler.cpp" />
+    <ClCompile Include="Task.cpp" />
     <ClCompile Include="TUI.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

@@ -1,15 +1,17 @@
 #pragma once
-#include "Calender.h"
+#include <vector>
 #include "Node.h"
 
 
 namespace scheduler {
 
+	class node;
+	
 	class LinkedList {
 	public:
 		static void insert_tail(node*& headptr, Task * task);
 		static void insert_head(node*& headptr, Task* task);
-		static vector<Task*> get_list(node* headptr);
+		static std::vector<Task*> get_list(node* headptr);
 		static void free_List(node*& headptr);
 		static void deleteTask(node *& headptr, int tasknum);
 		static void deleteHeadTask(node*& headptr);

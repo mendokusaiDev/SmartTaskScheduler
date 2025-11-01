@@ -1,8 +1,4 @@
 #include "Node.h"
-#include "Calender.h"
-#include <iostream>
-
-using namespace std;
 
 namespace scheduler {
 
@@ -25,5 +21,6 @@ namespace scheduler {
 	node::node(Task* task, int task_num) {
 		this->task = task;
 		this->task_num = task_num;
+		this->next = nullptr;
 	}
 }

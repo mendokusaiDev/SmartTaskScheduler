@@ -1,5 +1,6 @@
 #include "HeapNode.h" 
 // 생성자, task, left, right, parent에 대한 getter & setter
+
 namespace scheduler
 {
     HeapNode::HeapNode(scheduler::Task* t) :

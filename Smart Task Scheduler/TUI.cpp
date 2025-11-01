@@ -47,7 +47,7 @@ namespace scheduler {
             << (t->isfinished() ? "(완료) " : "")
             << hhmm(s) << " - " << hhmm(e)
             << "  | type=" << t->getType()
-            << "  | due=" << t->getEnddate() << "\n";
+            << "  | due=" << t->getEndDate() << "\n";
     }
 
     // ---- TUI methods ----
@@ -89,7 +89,7 @@ namespace scheduler {
         for (Task* t : tasks) {
             long long s, e; t->getTime(s, e);
             int yy, MM, dd, hh, mm; splitTime(s, yy, MM, dd, hh, mm);
-            int date = (s >= 0) ? (yy * 10000 + MM * 100 + dd) : t->getEnddate();
+            int date = (s >= 0) ? (yy * 10000 + MM * 100 + dd) : t->getEndDate();
             int d = date % 100; cnt[d]++;
         }
 
@@ -122,7 +122,7 @@ namespace scheduler {
             int yy, MM, dd, hh, mm;
             int key;
             if (s >= 0) { splitTime(s, yy, MM, dd, hh, mm); key = ymd(yy, MM, dd); }
-            else { key = t->getEnddate(); }
+            else { key = t->getEndDate(); }
             byDate[key].push_back(t);
         }
         for (map<int, vector<Task*> >::iterator it = byDate.begin(); it != byDate.end(); ++it) {
