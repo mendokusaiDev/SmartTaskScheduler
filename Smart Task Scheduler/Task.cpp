@@ -1,5 +1,5 @@
 ﻿#include "Task.h"
-
+#include "saveFile.h"
 using namespace scheduler;
 
 namespace scheduler {
@@ -13,6 +13,18 @@ namespace scheduler {
 		this->TaskNum = taskNum;
 		this->finished = 0;
 		this->endtime = -1;
+	}
+
+	Task::Task(std::string name, saveFile* f) {
+		this->name = name;
+		this->enddate = f->enddate;
+		this->duration = f->duration;
+		this->type = f->type;
+		this->starttime = f->starttime;
+		this->endtime = f->endtime;
+		this->TaskNum = f->TaskNum;
+		this->finished = f->finished;
+
 	}
 
 	void Task::getTime(long long& starttime, long long& endtime) {

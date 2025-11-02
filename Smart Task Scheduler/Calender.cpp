@@ -1,4 +1,6 @@
 ﻿#include "Calender.h"
+#include "saveFile.h"
+#include <fstream>
 
 
 namespace scheduler {
@@ -322,5 +324,124 @@ namespace scheduler {
 
 		return true;
 
+	}
+
+	void Calender::save() {
+		std::ofstream ofs("./save.tmp", std::ios::binary | std::ios::trunc);
+		if (!ofs) {
+			std::cout << "error opening file" << std::endl;
+
+			return;
+		}
+
+		int taskSize = allTasks.size(); //task 개수 저장하기
+		ofs.write((char*)&taskSize, sizeof(int));
+		//std::string name;
+		//long long enddate=0, duration=0, starttime=0, endtime=0;
+		//int type=0, tasknum=0;
+		//bool finished=0;
+		for (auto &cur : allTasks) {
+			saveFile* t = new saveFile(cur.second);
+			std::string str = cur.second->getTaskName();
+			int len = str.length();
+			int sFsize = sizeof(saveFile);
+
+			ofs.write((char*)&len, sizeof(int));
+			ofs.write((char*)str.c_str(), len);
+			ofs.write((char*)&sFsize, sizeof(int));
+			ofs.write((char*)t, sFsize);
+			delete t;
+		}
+
+		int queuedSize = queued.size();  //queued 저장
+		ofs.write((char*)&queuedSize, sizeof(int));
+		for (auto cur : queued) {
+			ofs.write((char*)&cur, sizeof(int));
+		}
+
+		int failedSize = failed.size();   //failed 저장
+		ofs.write((char*)&failedSize, sizeof(int));
+		for (auto cur : failed) {
+			ofs.write((char*)&cur, sizeof(int));
+		}
+
+		int finishedCount = finished.size();   //finished 저장
+		ofs.write((char*)&finishedCount, sizeof(int));
+		for (auto cur : finished) {
+			ofs.write((char*)&cur, sizeof(int));
+		}
+
+		ofs.write((char*)&stat, sizeof(calStats));   //캘린더 stat 저장
+		ofs.write((char*)&tasks_count, sizeof(int)); //캘린더 tasks_count 저장
+		
+		long long S_int = S->get_interval();
+		ofs.write((char*)&S_int, sizeof(long long)); //interval 저장하기
+		//std::cout << "interval: " << S_int << std::endl;
+
+		ofs.close();
+
+		return;
+	}
+
+	void Calender::restore() {
+		std::ifstream ifs("./save.tmp", std::ios::binary);
+		if (!ifs) return;
+
+		std::cout << "restoring" << std::endl;
+
+		//task 개수 가져오기
+		int taskCount = 0;
+		ifs.read((char*)&taskCount, sizeof(int));
+		Task* cur= nullptr;
+		for (int i = 0; i < taskCount; i++) {  //allTasks 저장하기
+			int slen = 0, sflen = 0;
+			std::string str; saveFile* fs = new saveFile();
+			ifs.read((char*)&slen, sizeof(int));
+			str.resize(slen);
+			ifs.read((char*)str.c_str(), slen);
+			ifs.read((char*)&sflen, sizeof(int));
+			ifs.read((char*)fs, sflen);
+			cur = new Task(str, fs);
+			allTasks[cur->getTaskNum()] = cur;
+		}
+
+		//queued 저장하기
+		int queuedCount = 0;
+		ifs.read((char*)&queuedCount, sizeof(int));
+		int queuedN = -1;
+		for (int i = 0; i < queuedCount; i++) {
+			ifs.read((char*)&queuedN, sizeof(int));
+			queued.push_back(queuedN);
+		}
+
+		//failed 저장하기
+		int failedCount = 0;
+		ifs.read((char*)&failedCount, sizeof(int));
+		int failedN = -1;
+		for (int i = 0; i < failedCount; i++) {
+			ifs.read((char*)&failedN, sizeof(int));
+			queued.push_back(failedN);
+		}
+
+		//finished 저장하기
+		int finCount = 0;
+		ifs.read((char*)&finCount, sizeof(int));
+		int finN = -1;
+		for (int i = 0; i < finCount; i++) {
+			ifs.read((char*)&finN, sizeof(int));
+			queued.push_back(finN);
+		}
+
+		ifs.read((char*)&stat, sizeof(calStats));  //통계 저장하기
+		ifs.read((char*)&tasks_count, sizeof(int)); //캘린더 tasks_count 저장
+
+		long long S_int = -1;
+		ifs.read((char*)&S_int, sizeof(long long));   //스케줄러 인터벌 저장
+		//std::cout << "interval: " << S_int << std::endl;
+		S->ChangeInterval(S_int);
+
+		ifs.close();
+
+		return;
 	}
 }
