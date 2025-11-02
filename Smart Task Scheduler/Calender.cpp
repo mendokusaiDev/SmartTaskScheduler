@@ -1,4 +1,5 @@
 ﻿#include "Calender.h"
+#include "saveFile.h"
 #include <fstream>
 
 namespace scheduler {
@@ -348,10 +349,16 @@ namespace scheduler {
 		//int type=0, tasknum=0;
 		//bool finished=0;
 		for (auto &cur : allTasks) {
-			int Tsize = sizeof(*(cur.second));
-			//std::cout << Tsize << std::endl;
-			ofs.write((char*)&Tsize, sizeof(int));
-			ofs.write((char*)cur.second, Tsize);
+			saveFile* t = new saveFile(cur.second);
+			std::string str = cur.second->getTaskName();
+			int len = str.length();
+			int sFsize = sizeof(saveFile);
+
+			ofs.write((char*)&len, sizeof(int));
+			ofs.write((char*)str.c_str(), len);
+			ofs.write((char*)&sFsize, sizeof(int));
+			ofs.write((char*)t, sFsize);
+			delete t;
 		}
 
 		int queuedSize = queued.size();  //queued 저장
@@ -395,10 +402,14 @@ namespace scheduler {
 		ifs.read((char*)&taskCount, sizeof(int));
 		Task* cur= nullptr;
 		for (int i = 0; i < taskCount; i++) {  //allTasks 저장하기
-			cur = new Task();
-			int rsize = 0;
-			ifs.read((char*)&rsize, sizeof(int));
-			ifs.read((char*)cur, sizeof(Task));
+			int slen = 0, sflen = 0;
+			std::string str; saveFile* fs = new saveFile();
+			ifs.read((char*)&slen, sizeof(int));
+			str.resize(slen);
+			ifs.read((char*)str.c_str(), slen);
+			ifs.read((char*)&sflen, sizeof(int));
+			ifs.read((char*)fs, sflen);
+			cur = new Task(str, fs);
 			allTasks[cur->getTaskNum()] = cur;
 		}
 

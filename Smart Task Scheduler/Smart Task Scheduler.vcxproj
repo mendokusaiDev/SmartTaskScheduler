@@ -27,6 +27,7 @@
     <ClInclude Include="LinkedList.h" />
     <ClInclude Include="Node.h" />
     <ClInclude Include="Priority_queue.h" />
+    <ClInclude Include="saveFile.h" />
     <ClInclude Include="Scheduler.h" />
     <ClInclude Include="Task.h" />
     <ClInclude Include="TUI.h" />
@@ -41,6 +42,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Node.cpp" />
     <ClCompile Include="Priority_queue.cpp" />
+    <ClCompile Include="saveFile.cpp" />
     <ClCompile Include="Scheduler.cpp" />
     <ClCompile Include="Task.cpp" />
     <ClCompile Include="TUI.cpp" />

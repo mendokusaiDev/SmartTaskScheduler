@@ -1,8 +1,10 @@
 ﻿#pragma once
 #include <string>
+//#include "saveFile.h"
 //using namespace std;
 
 namespace scheduler {
+	class saveFile;
 
 	class Task {
 	private:
@@ -17,7 +19,7 @@ namespace scheduler {
 
 	public:
 		Task(std::string name, long long enddate, long long duration, int type, int taskNum);
-		Task() {};
+		Task(std::string name, saveFile* f);
 		void changeTask(std::string name, long long enddate, long long duration, int type);
 		int getTaskNum();
 		std::string getTaskName() { return name; }
@@ -35,6 +37,8 @@ namespace scheduler {
 		int getType() {
 			return type;
 		}
+		long long getstarttime() { return starttime; }
+		long long getendtime() { return endtime; }
 		//int getEnddate() {
 		//	return enddate;
 		//}

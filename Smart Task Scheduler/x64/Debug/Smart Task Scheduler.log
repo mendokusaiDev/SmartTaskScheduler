@@ -1,5 +1,11 @@
-﻿  TUI.cpp
-G:\Smart Task Scheduler\Smart Task Scheduler\Smart Task Scheduler\TUI.cpp(103,22): warning C4244: '초기화 중': '__int64'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-G:\Smart Task Scheduler\Smart Task Scheduler\Smart Task Scheduler\TUI.cpp(185,41): warning C4244: '인수': 'scheduler::ll'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-G:\Smart Task Scheduler\Smart Task Scheduler\Smart Task Scheduler\TUI.cpp(185,36): warning C4244: '인수': 'scheduler::ll'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+﻿  Calender.cpp
+G:\Smart Task Scheduler\Smart Task Scheduler\Smart Task Scheduler\Calender.cpp(122,16): warning C4244: '초기화 중': '__int64'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+G:\Smart Task Scheduler\Smart Task Scheduler\Smart Task Scheduler\Calender.cpp(142,37): warning C4244: '인수': '__int64'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+G:\Smart Task Scheduler\Smart Task Scheduler\Smart Task Scheduler\Calender.cpp(158,38): warning C4244: '인수': '__int64'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+G:\Smart Task Scheduler\Smart Task Scheduler\Smart Task Scheduler\Calender.cpp(217,13): warning C4244: '초기화 중': '__int64'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+G:\Smart Task Scheduler\Smart Task Scheduler\Smart Task Scheduler\Calender.cpp(345,16): warning C4267: '초기화 중': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+G:\Smart Task Scheduler\Smart Task Scheduler\Smart Task Scheduler\Calender.cpp(354,12): warning C4267: '초기화 중': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+G:\Smart Task Scheduler\Smart Task Scheduler\Smart Task Scheduler\Calender.cpp(364,18): warning C4267: '초기화 중': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+G:\Smart Task Scheduler\Smart Task Scheduler\Smart Task Scheduler\Calender.cpp(370,18): warning C4267: '초기화 중': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+G:\Smart Task Scheduler\Smart Task Scheduler\Smart Task Scheduler\Calender.cpp(376,21): warning C4267: '초기화 중': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
   Smart Task Scheduler.vcxproj -> G:\Smart Task Scheduler\Smart Task Scheduler\x64\Debug\Smart Task Scheduler.exe
