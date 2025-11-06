@@ -1,20 +1,18 @@
 ﻿#pragma once
-#include "Task.h"
-#include "LinkedList.h"
-#include "Node.h"
 #include <vector>
 
 
 namespace scheduler {
 
-	class node;
+	class Tnode;
+	class Task;
 
 	class cal_Day {
 	private:
 		int year; //¿¬µµ
 		int month;  //¿ù
 		int day;   //ÀÏ
-		node* Task_headptr;
+		Tnode* Task_headptr;
 
 	public:
 		void insert_Task(int tasknum, Task* task);
@@ -22,5 +20,7 @@ namespace scheduler {
 		void freeTask();
 		cal_Day(int year, int month, int day);
 		void freeTaskNum(int tasknum);
+		bool operator==(int n);
+		bool operator==(cal_Day d) const;
 	};
 }

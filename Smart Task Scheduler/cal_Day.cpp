@@ -1,9 +1,22 @@
 ﻿#include "cal_Day.h"
 #include "LinkedList.h"
+#include "Tnode.h"
+#include "Task.h"
 
 namespace scheduler {
 	///////////////////////////////////////////////
 	//cal Day °ü·Ã
+
+	bool cal_Day::operator==(int n) {
+		if (this->day == n) return true;
+		return false;
+	}
+
+	bool cal_Day::operator==(cal_Day d) const {
+		if (this->day == d.day) return true;
+		return false;
+	}
+
 
 	void cal_Day::insert_Task(int tasknum, Task* task) {
 		LinkedList::insert_tail(this->Task_headptr, task);

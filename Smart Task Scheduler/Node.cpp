@@ -2,25 +2,30 @@
 
 namespace scheduler {
 
-	void node::setLink(node* next) {
+	template<class Item>
+	void node<Item>::setLink(node<Item>* next) {
 		this->next = next;
 	}
 
-	node* node::getLink() {
+	template<class Item>
+	node<Item>* node<Item>::getLink() {
 		return this->next;
 	}
 
-	void node::setData(Task* data) {
-		this->task = data;
+	template<class Item>
+	void node<Item>::setData(Item data) {
+		this->data = data;
 	}
 
-	Task* node::getData() {
-		return this->task;
+	template<class Item>
+	Item node<Item>::getData() {
+		return this->data;
 	}
 
-	node::node(Task* task, int task_num) {
-		this->task = task;
-		this->task_num = task_num;
+	template<class Item>
+	node<Item>::node(Item task) {
+		this->data = task;
+		//this->task_num = task_num;
 		this->next = nullptr;
 	}
 }

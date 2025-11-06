@@ -29,7 +29,9 @@
     <ClInclude Include="Priority_queue.h" />
     <ClInclude Include="saveFile.h" />
     <ClInclude Include="Scheduler.h" />
+    <ClInclude Include="Set.h" />
     <ClInclude Include="Task.h" />
+    <ClInclude Include="Tnode.h" />
     <ClInclude Include="TUI.h" />
   </ItemGroup>
   <ItemGroup>
@@ -40,11 +42,11 @@
     <ClCompile Include="HeapNode.cpp" />
     <ClCompile Include="LinkedList.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Node.cpp" />
     <ClCompile Include="Priority_queue.cpp" />
     <ClCompile Include="saveFile.cpp" />
     <ClCompile Include="Scheduler.cpp" />
     <ClCompile Include="Task.cpp" />
+    <ClCompile Include="Tnode.cpp" />
     <ClCompile Include="TUI.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

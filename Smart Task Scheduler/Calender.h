@@ -1,10 +1,11 @@
 ﻿#pragma once
 #define _CRT_SECURE_NO_WARNINGS
-#include "Scheduler.h"
+//#include "Scheduler.h"
 //#include "Node.h"
-#include "cal_Year.h"
+//#include "cal_Year.h"
 //#include "cal_Day.h"
-#include "Task.h"
+//#include "Task.h"
+#include "Set.h"
 #include <map>
 #include <vector>
 #include <string>
@@ -15,6 +16,8 @@ namespace scheduler {
 
 	class cal_Year;
 	class cal_Day;
+	class Task;
+	class Scheduler;
 
 	class Calender {
 	private:
@@ -23,7 +26,7 @@ namespace scheduler {
 		std::vector<int> finished;  //끝난 일정
 		std::map<int, Task*> allTasks;  //모든 작업
 		//cal_Year* headptr;  //연도 headptr
-		std::map<int, cal_Year*> year_headptr; //연도 headptr
+		Set<cal_Year*> year_headptr; //연도 headptr
 		int tasks_count = 0;  //누적 일정 개수 (이게 일정의 고유번호가 됨)
 		Scheduler* S= nullptr;  //스케줄러
 

@@ -1,5 +1,11 @@
 ﻿#include "Calender.h"
 #include "saveFile.h"
+#include "cal_Day.h"
+#include "cal_Month.h"
+#include "cal_Year.h"
+#include "Task.h"
+#include "Scheduler.h"
+
 #include <fstream>
 
 namespace scheduler {
@@ -69,8 +75,7 @@ namespace scheduler {
 		int curMonth = (date % 10000) / 100;
 		int curDay = date % 100;
 		cal_Year* tempY; cal_Month* tempM;
-		if (year_headptr.find(curYear) == year_headptr.end()) return nullptr;
-		tempY = year_headptr[curYear];
+		if ((tempY = year_headptr.get_Item(curYear))==nullptr) return nullptr;
 
 		if ((tempM = tempY->get_Month(curMonth)) == nullptr) return nullptr;
 
@@ -83,10 +88,10 @@ namespace scheduler {
 		int curDay = date % 100;
 
 		cal_Year* newY; cal_Month* newM;
-		if (year_headptr.find(curYear) == year_headptr.end()) {
-			year_headptr[curYear] = new cal_Year(curYear);
+		if (year_headptr.get_Item(curYear) == nullptr) {
+			year_headptr.put_Item(new cal_Year(curYear));
 		}
-		newY = year_headptr[curYear];
+		newY = year_headptr.get_Item(curYear);
 
 		if (newY->get_Month(curMonth) == nullptr) {
 			newY->set_Month(curMonth);
@@ -290,10 +295,11 @@ namespace scheduler {
 
 	bool Calender::get_Month(std::vector<Task*>  & tasks, int year, int month, int day) {
 
-		if (year_headptr.find(year) == year_headptr.end()) return false;
+		if (year_headptr.get_Item(year)==nullptr) return false;
+		cal_Year* curY = year_headptr.get_Item(year);
 
-		cal_Year* curY = year_headptr[year];
 		if (curY == nullptr) return false;
+
 		cal_Month* curM = curY->get_Month(month);
 		if (curM == nullptr) return false;
 		cal_Day* curD = nullptr;

@@ -1,62 +1,41 @@
 ﻿#include "LinkedList.h"
-
+#include "Task.h"
+#include "Tnode.h"
+#include "Node.h"
+#include <iostream>
 
 namespace scheduler {
 
-	void LinkedList::insert_tail(node*& headptr, Task* task) {
+
+	void LinkedList::insert_tail(Tnode*& headptr, Task* task) {
 		if (headptr == nullptr) {
 			insert_head(headptr, task);
 			return;
 		}
 
-		node* ins = new node(task, task->getTaskNum());
-		node* cur = headptr;
+		Tnode* ins = new Tnode(task, task->getTaskNum());
+		Tnode* cur = headptr;
 		while (cur->getLink() != nullptr) {
 			cur = cur->getLink();
 		}
 
 		cur->setLink(ins);
+		
+		return;
+	}
+
+	void LinkedList::insert_head(Tnode*& headptr, Task* task) {
+		headptr = new Tnode(task, task->getTaskNum());
 
 		return;
 	}
 
 
-	void LinkedList::insert_head(node*& headptr, Task* task) {
-		headptr = new node(task, task->getTaskNum());
-
-		return;
-	}
-
-
-	std::vector<Task*> LinkedList::get_list(node* headptr) {
-		node* cur = headptr;
-		std::vector<Task*> ret;
-
-		while (cur != nullptr) {
-			ret.push_back(cur->getData());
-			cur = cur->getLink();
-		}
-
-		return ret;
-	}
-
-	void LinkedList::free_List(node*& headptr) {
-		node* cur = headptr;
-
-		while (cur != nullptr) {
-			node* next = cur->getLink();
-			delete cur;
-			cur = next;
-		}
-
-		headptr = nullptr;
-
-		return;
-	}
-
-	void LinkedList::deleteTask(node*& headptr, int tasknum) {
-		node* cur = headptr;
-		node* prev = headptr;
+	//수정필요
+	//template<class Item>
+	void LinkedList::deleteTask(Tnode*& headptr, int tasknum) {
+		Tnode* cur = headptr;
+		Tnode* prev = headptr;
 
 		if (headptr == nullptr) {
 			std::cout << "error: headptr is null from deleteTask" << std::endl;
@@ -80,11 +59,26 @@ namespace scheduler {
 		return;
 	}
 
-	void LinkedList::deleteHeadTask(node*& headptr) {
-		node* del = headptr;
+	//template<class Item>
+	void LinkedList::deleteHeadTask(Tnode*& headptr) {
+		Tnode* del = headptr;
 		headptr = del->getLink();
 
 		delete del;
+
+		return;
+	}
+
+	void LinkedList::free_List(Tnode*& headptr) {
+		Tnode* cur = headptr;
+
+		while (cur != nullptr) {
+			Tnode* next = cur->getLink();
+			delete cur;
+			cur = next;
+		}
+
+		headptr = nullptr;
 
 		return;
 	}

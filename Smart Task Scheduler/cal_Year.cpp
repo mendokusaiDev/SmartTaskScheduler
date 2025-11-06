@@ -1,25 +1,33 @@
 ﻿#include "cal_Year.h"
+#include "cal_Month.h"
+#include "Set.h"
 
 namespace scheduler {
 	///////////////////////////////////
 	//cal Year 관련
-	cal_Month* cal_Year::get_Month(int month) {
-		if (this->month_headptr.find(month) == this->month_headptr.end())
-			return nullptr;
 
-		return this->month_headptr[month];
+	bool cal_Year::operator==(int n) {
+		if (this->year == n) return true;
+		return false;
 	}
 
+	bool cal_Year::operator==(cal_Year d) const {
+		if (this->year == d.year) return true;
+		return false;
+	}
+
+	cal_Month* cal_Year::get_Month(int month) {
+		return (cal_Month*)month_headptr.get_Item(month);
+	}
 
 	void cal_Year::set_Month(int month) {
 
-		if (get_Month(month) != nullptr) {
+		if (get_Month(month) != NULL) {
 			std::cout << "error: " << month << "on " << this->year << "already exists\n";
 			return;
 		}
 
-		this->month_headptr[month] = new cal_Month(this->year, month); //수정하기
-
+		month_headptr.put_Item(new cal_Month(this->year, month)); //수정하기
 	}
 
 	cal_Year::cal_Year(int year) {

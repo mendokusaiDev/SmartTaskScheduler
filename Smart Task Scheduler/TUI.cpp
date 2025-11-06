@@ -7,6 +7,7 @@
 #include <ctime>
 #include <limits>
 #include <string>
+#include "Task.h"
 
 using namespace std;
 using scheduler::Task;
