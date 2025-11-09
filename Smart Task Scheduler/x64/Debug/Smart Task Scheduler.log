@@ -1,89 +1,21 @@
 ﻿  Calender.cpp
-D:\Smart Task Scheduler\Smart Task Scheduler\Calender.cpp(127,16): warning C4244: 'initializing': conversion from '__int64' to 'int', possible loss of data
-D:\Smart Task Scheduler\Smart Task Scheduler\Calender.cpp(147,37): warning C4244: 'argument': conversion from '__int64' to 'int', possible loss of data
-D:\Smart Task Scheduler\Smart Task Scheduler\Calender.cpp(163,38): warning C4244: 'argument': conversion from '__int64' to 'int', possible loss of data
-D:\Smart Task Scheduler\Smart Task Scheduler\Calender.cpp(222,13): warning C4244: 'initializing': conversion from '__int64' to 'int', possible loss of data
-D:\Smart Task Scheduler\Smart Task Scheduler\Calender.cpp(351,16): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-D:\Smart Task Scheduler\Smart Task Scheduler\Calender.cpp(360,12): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-D:\Smart Task Scheduler\Smart Task Scheduler\Calender.cpp(370,18): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-D:\Smart Task Scheduler\Smart Task Scheduler\Calender.cpp(376,18): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-D:\Smart Task Scheduler\Smart Task Scheduler\Calender.cpp(382,21): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-D:\Smart Task Scheduler\Smart Task Scheduler\LinkedList.h(36,41): error C2039: 'getTaskNum': is not a member of 'scheduler::cal_Year'
-  (compiling source file 'Calender.cpp')
-      D:\Smart Task Scheduler\Smart Task Scheduler\cal_Year.h(14,8):
-      see declaration of 'scheduler::cal_Year'
-      D:\Smart Task Scheduler\Smart Task Scheduler\LinkedList.h(36,41):
-      the template instantiation context (the oldest one first) is
-          D:\Smart Task Scheduler\Smart Task Scheduler\Calender.h(29,18):
-          see reference to class template instantiation 'scheduler::Set<scheduler::cal_Year *>' being compiled
-          D:\Smart Task Scheduler\Smart Task Scheduler\Set.h(32,8):
-          while compiling class template member function 'void scheduler::Set<scheduler::cal_Year *>::put_Item(Item)'
-          with
-          [
-              Item=scheduler::cal_Year *
-          ]
-              D:\Smart Task Scheduler\Smart Task Scheduler\Calender.cpp(92,25):
-              see the first reference to 'scheduler::Set<scheduler::cal_Year *>::put_Item' in 'scheduler::Calender::newDay'
-          D:\Smart Task Scheduler\Smart Task Scheduler\Set.h(34,16):
-          see reference to function template instantiation 'void scheduler::LinkedList::insert_head<Item>(scheduler::node<Item> *&,Item)' being compiled
-          with
-          [
-              Item=scheduler::cal_Year *
-          ]
-  
-  LinkedList.cpp
-  TUI.cpp
-D:\Smart Task Scheduler\Smart Task Scheduler\TUI.cpp(104,22): warning C4244: 'initializing': conversion from '__int64' to 'int', possible loss of data
-D:\Smart Task Scheduler\Smart Task Scheduler\TUI.cpp(186,41): warning C4244: 'argument': conversion from 'scheduler::ll' to 'int', possible loss of data
-D:\Smart Task Scheduler\Smart Task Scheduler\TUI.cpp(186,36): warning C4244: 'argument': conversion from 'scheduler::ll' to 'int', possible loss of data
+G:\Smart Task Scheduler\Smart Task Scheduler\Smart Task Scheduler\Calender.cpp(127,16): warning C4244: '초기화 중': '__int64'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+G:\Smart Task Scheduler\Smart Task Scheduler\Smart Task Scheduler\Calender.cpp(147,37): warning C4244: '인수': '__int64'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+G:\Smart Task Scheduler\Smart Task Scheduler\Smart Task Scheduler\Calender.cpp(163,38): warning C4244: '인수': '__int64'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+G:\Smart Task Scheduler\Smart Task Scheduler\Smart Task Scheduler\Calender.cpp(222,13): warning C4244: '초기화 중': '__int64'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+G:\Smart Task Scheduler\Smart Task Scheduler\Smart Task Scheduler\Calender.cpp(351,16): warning C4267: '초기화 중': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+G:\Smart Task Scheduler\Smart Task Scheduler\Smart Task Scheduler\Calender.cpp(360,12): warning C4267: '초기화 중': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+G:\Smart Task Scheduler\Smart Task Scheduler\Smart Task Scheduler\Calender.cpp(370,18): warning C4267: '초기화 중': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+G:\Smart Task Scheduler\Smart Task Scheduler\Smart Task Scheduler\Calender.cpp(376,18): warning C4267: '초기화 중': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+G:\Smart Task Scheduler\Smart Task Scheduler\Smart Task Scheduler\Calender.cpp(382,21): warning C4267: '초기화 중': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
   cal_Day.cpp
   cal_Month.cpp
-D:\Smart Task Scheduler\Smart Task Scheduler\LinkedList.h(36,41): error C2039: 'getTaskNum': is not a member of 'scheduler::cal_Day'
-  (compiling source file 'cal_Month.cpp')
-      D:\Smart Task Scheduler\Smart Task Scheduler\cal_Day.h(10,8):
-      see declaration of 'scheduler::cal_Day'
-      D:\Smart Task Scheduler\Smart Task Scheduler\LinkedList.h(36,41):
-      the template instantiation context (the oldest one first) is
-          D:\Smart Task Scheduler\Smart Task Scheduler\cal_Month.h(17,17):
-          see reference to class template instantiation 'scheduler::Set<scheduler::cal_Day *>' being compiled
-          D:\Smart Task Scheduler\Smart Task Scheduler\Set.h(32,8):
-          while compiling class template member function 'void scheduler::Set<scheduler::cal_Day *>::put_Item(Item)'
-          with
-          [
-              Item=scheduler::cal_Day *
-          ]
-              D:\Smart Task Scheduler\Smart Task Scheduler\cal_Month.cpp(31,23):
-              see the first reference to 'scheduler::Set<scheduler::cal_Day *>::put_Item' in 'scheduler::cal_Month::set_Day'
-          D:\Smart Task Scheduler\Smart Task Scheduler\Set.h(34,16):
-          see reference to function template instantiation 'void scheduler::LinkedList::insert_head<Item>(scheduler::node<Item> *&,Item)' being compiled
-          with
-          [
-              Item=scheduler::cal_Day *
-          ]
-  
   cal_Year.cpp
-D:\Smart Task Scheduler\Smart Task Scheduler\LinkedList.h(36,41): error C2039: 'getTaskNum': is not a member of 'scheduler::cal_Month'
-  (compiling source file 'cal_Year.cpp')
-      D:\Smart Task Scheduler\Smart Task Scheduler\cal_Month.h(13,8):
-      see declaration of 'scheduler::cal_Month'
-      D:\Smart Task Scheduler\Smart Task Scheduler\LinkedList.h(36,41):
-      the template instantiation context (the oldest one first) is
-          D:\Smart Task Scheduler\Smart Task Scheduler\cal_Year.h(17,19):
-          see reference to class template instantiation 'scheduler::Set<scheduler::cal_Month *>' being compiled
-          D:\Smart Task Scheduler\Smart Task Scheduler\Set.h(32,8):
-          while compiling class template member function 'void scheduler::Set<scheduler::cal_Month *>::put_Item(Item)'
-          with
-          [
-              Item=scheduler::cal_Month *
-          ]
-              D:\Smart Task Scheduler\Smart Task Scheduler\cal_Year.cpp(30,25):
-              see the first reference to 'scheduler::Set<scheduler::cal_Month *>::put_Item' in 'scheduler::cal_Year::set_Month'
-          D:\Smart Task Scheduler\Smart Task Scheduler\Set.h(34,16):
-          see reference to function template instantiation 'void scheduler::LinkedList::insert_head<Item>(scheduler::node<Item> *&,Item)' being compiled
-          with
-          [
-              Item=scheduler::cal_Month *
-          ]
-  
+  LinkedList.cpp
   main.cpp
-  Generating Code...
+  TUI.cpp
+G:\Smart Task Scheduler\Smart Task Scheduler\Smart Task Scheduler\TUI.cpp(104,22): warning C4244: '초기화 중': '__int64'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+G:\Smart Task Scheduler\Smart Task Scheduler\Smart Task Scheduler\TUI.cpp(186,41): warning C4244: '인수': 'scheduler::ll'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+G:\Smart Task Scheduler\Smart Task Scheduler\Smart Task Scheduler\TUI.cpp(186,36): warning C4244: '인수': 'scheduler::ll'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  코드를 생성하고 있습니다...
+  Smart Task Scheduler.vcxproj -> G:\Smart Task Scheduler\Smart Task Scheduler\x64\Debug\Smart Task Scheduler.exe

@@ -18,7 +18,7 @@ namespace scheduler {
 				return;
 			}
 
-			node<Item>* ins = new node(task, task->getTaskNum());
+			node<Item>* ins = new node(task);
 			node<Item>* cur = headptr;
 			while (cur->getLink() != nullptr) {
 				cur = cur->getLink();
@@ -33,7 +33,7 @@ namespace scheduler {
 
 		template<class Item>
 		static void insert_head(node<Item>*& headptr, Item task) {
-			headptr = new node<Item>(task, task->getTaskNum());
+			headptr = new node<Item>(task);
 
 			return;
 		}
