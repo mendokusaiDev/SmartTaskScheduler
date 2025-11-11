@@ -9,17 +9,24 @@ namespace scheduler {
 	private:
 		Calender* c;
 
-		void showMonth();
-		void showWeek();
-		void showDay();
+		void showMonth(int year, int month);
+		void showWeek(int year, int month, int day);
+		void showDay(int year, int month, int day);
 
 		void addTask();
 		void editTask();
 		void deleteTask();
 
 		void showStatistics();
-
+		
 		void changeInterval();
+
+		void get_current_time(int& year, int& month, int& day);
+		void get_next_day(int& year, int& month, int& day, int offset);
+		void get_next_week(int& year, int& month, int& day, int offset);
+		void get_next_month(int& year, int& month, int& day, int offset);
+
+
 
 	public:
 		void mainMenu();
