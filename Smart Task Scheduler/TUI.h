@@ -25,6 +25,7 @@ namespace scheduler {
 		void get_next_day(int& year, int& month, int& day, int offset);
 		void get_next_week(int& year, int& month, int& day, int offset);
 		void get_next_month(int& year, int& month, int& day, int offset);
+		void get_first_day_of_week(int& year, int& month, int& day);
 
 
 

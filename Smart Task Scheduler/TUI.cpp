@@ -114,7 +114,7 @@ namespace scheduler {
         t += offset * (24 * 60 * 60);
 
         timeinfo = *std::gmtime(&t);
-        year = timeinfo.tm_year;
+        year = timeinfo.tm_year + 1900;
         month = timeinfo.tm_mon + 1;   // 1..12
         day = timeinfo.tm_mday;      // 1..31
     }
@@ -135,7 +135,7 @@ namespace scheduler {
         t += offset * (7*24 * 60 * 60);
 
         timeinfo = *std::gmtime(&t);
-        year = timeinfo.tm_year;
+        year = timeinfo.tm_year+1900;
         month = timeinfo.tm_mon + 1;   // 1..12
         day = timeinfo.tm_mday;      // 1..31
     }
@@ -151,6 +151,28 @@ namespace scheduler {
             month = 1;
             year += 1;
         }
+    }
+
+    void TUI::get_first_day_of_week(int& year, int& month, int& day) {
+        tm tm{};
+        tm.tm_year = year - 1900;
+        tm.tm_mon = month - 1;   // 0..11
+        tm.tm_mday = day;
+        tm.tm_hour = 12;      // DST/타임존 영향 최소화 (한낮으로 설정)
+
+        // 날짜 정규화 + 요일 채우기 (tm_wday: 0=Sun..6=Sat)
+        if (std::mktime(&tm) == -1) return;
+
+        int wday = tm.tm_wday;                       // 0..6
+        int offset = (7 + wday - 1) % 7;      // 되돌아갈 일수
+
+        tm.tm_mday -= offset;                          // 주 시작으로 이동
+        if (std::mktime(&tm) == -1) return;
+
+        year = tm.tm_year + 1900;
+        month = tm.tm_mon + 1;
+        day = tm.tm_mday;
+        return;
     }
 
     // ---- TUI methods ----
@@ -255,12 +277,14 @@ namespace scheduler {
     // 주 뷰: 기준 YYYY MM DD 입력 → 그 주(월~일) 각 일자와 작업 목록
     void TUI::showWeek(int year, int month, int day) {
         int y=year, m=month, d=day;
+        get_first_day_of_week(y, m, d);
         /*cout << "연도 월 일 입력 (예: 2025 10 28): ";
         cin >> y >> m >> d;*/
         vector<Task*> tasks;
         c->get_Week(tasks, y, m, d);
         // 날짜별 그룹핑
         map<int, vector<Task*> > byDate;
+        int count = 0;
         for (Task* t : tasks) {
             long long s, e; t->getTime(s, e);
             int yy, MM, dd, hh, mm;
@@ -284,9 +308,9 @@ namespace scheduler {
         /*; cout << "연도 월 일 입력 (예: 2025 10 28): ";
         cin >> y >> m >> d;*/
         vector<Task*> tasks;
-        if (!c->get_Day(tasks, y, m, d)) {
+        /*if (!c->get_Day(tasks, y, m, d)) {
             cout << "해당 일 일정 없음\n"; return;
-        }
+        }*/
         cout << "\n[" << y << "-" << m << "-" << d << "] 일정\n";
         for (Task* t : tasks) printTaskLine(t);
         if (tasks.empty()) cout << "일정 없음\n";
