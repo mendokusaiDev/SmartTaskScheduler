@@ -139,4 +139,9 @@ bool Scheduler::ChangeInterval(long long time) {
     return true;
 }
 
+void Scheduler::setUnterruptedTime(long long start, long long end) {
+    this->unInterruptStart = start;
+    this->unInterruptEnd = end;
+}
+
 } // namespace scheduler

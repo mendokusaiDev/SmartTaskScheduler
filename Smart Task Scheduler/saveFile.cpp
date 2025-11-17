@@ -12,5 +12,6 @@ namespace scheduler {
 		endtime = t->getendtime();
 		TaskNum = t->getTaskNum();
 		finished = t->isfinished();
+		fixed = t->isFixed();
 	}
 }

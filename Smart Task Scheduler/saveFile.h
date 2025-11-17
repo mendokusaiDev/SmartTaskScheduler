@@ -15,6 +15,7 @@ namespace scheduler {
 		long long endtime = -1;    //끝 시간
 		int TaskNum = -1;  //고유 작업 번호
 		bool finished = 0; //완료 여부
+		bool fixed = 0;
 
 		saveFile(Task* t);
 

@@ -16,9 +16,11 @@ namespace scheduler {
 		long long endtime=-1;    //끝 시간
 		int TaskNum=-1;  //고유 작업 번호
 		bool finished = 0; //완료 여부
+		bool fixed = 0;
 
 	public:
 		Task(std::string name, long long enddate, long long duration, int type, int taskNum);
+		Task(bool fixed, std::string name, long long starttime, long long endtime, int type, int taskNum);
 		Task(std::string name, saveFile* f);
 		void changeTask(std::string name, long long enddate, long long duration, int type);
 		int getTaskNum();
@@ -28,6 +30,8 @@ namespace scheduler {
 		bool isfinished() {
 			return finished;
 		}
+		bool isFixed();
+
 		void done() {
 			finished = 1;
 		}

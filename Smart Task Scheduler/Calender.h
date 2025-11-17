@@ -59,6 +59,8 @@ namespace scheduler {
 		bool deleteTask(int taskNum);
 		bool editTask(int taskNum, std::string name, int dur, int duedate, int type);
 		void markFinished(int taskNum);
+		bool addFixedTask(std::string name, long long startime, long long endtime, int type);
+		void setUninterruptedTime(long long start, long long end);
 
 		bool get_Day(std::vector<Task*> & tasks, int year, int month, int day);
 		bool get_Week(std::vector<Task*> & tasks, int year, int month, int day);

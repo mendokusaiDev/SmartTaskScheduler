@@ -15,6 +15,18 @@ namespace scheduler {
 		this->endtime = -1;
 	}
 
+	Task::Task(bool fixed, std::string name, long long starttime, long long endtime, int type, int taskNum) {
+		this->name = name;
+		this->starttime = starttime;
+		this->endtime = endtime;
+		this->duration = endtime - starttime;
+		this->type = type;
+		this->TaskNum = taskNum;
+		this->finished = 0;
+		this->enddate = endtime;
+		this->fixed = 1;
+	}
+
 	Task::Task(std::string name, saveFile* f) {
 		this->name = name;
 		this->enddate = f->enddate;
@@ -25,6 +37,10 @@ namespace scheduler {
 		this->TaskNum = f->TaskNum;
 		this->finished = f->finished;
 
+	}
+
+	bool Task::isFixed() {
+		return this->fixed;
 	}
 
 	void Task::getTime(long long& starttime, long long& endtime) {

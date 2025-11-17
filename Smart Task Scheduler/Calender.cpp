@@ -210,6 +210,29 @@ namespace scheduler {
 		return true;
 	}
 
+	bool Calender::addFixedTask(std::string name, long long startime, long long endtime, int type) {
+		refreshCal();
+
+		Task* t = new Task(1, name, startime, endtime, type, tasks_count);  //고정 일정
+		this->allTasks[this->tasks_count] = t;
+		this->tasks_count++;
+
+		std::vector<Task*> tempq, tempf;
+		for (int ptr : queued) tempq.push_back(this->allTasks[ptr]);
+		for (int ptr : failed) tempq.push_back(this->allTasks[ptr]);
+		tempq.push_back(t);
+		//S->makeSchedule(tempq, tempf);
+
+		remakeCal(tempq, tempf);
+
+		refreshCal();
+
+		return true;
+	}
+	void Calender::setUninterruptedTime(long long start, long long end) {
+		S->setUnterruptedTime(start, end);
+	}
+
 	bool Calender::deleteTask(int taskNum) {   //미완료 일정에 대해서 삭제 진행
 		refreshCal();
 		//1. 이미 끝난 일
