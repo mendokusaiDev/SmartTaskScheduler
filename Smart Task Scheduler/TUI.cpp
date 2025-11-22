@@ -1,4 +1,4 @@
-﻿#include "TUI.h"
+#include "TUI.h"
 #include <iostream>
 #include <iomanip>
 #include <sstream>
@@ -12,10 +12,9 @@
 #include <cstdlib>
 #include <conio.h>
 
-//using namespace std;
+// using namespace std;
 using scheduler::Task;
 using namespace std;
-
 
 namespace scheduler {
 
@@ -27,6 +26,7 @@ namespace scheduler {
         ci.bVisible = FALSE;
         SetConsoleCursorInfo(h, &ci);
     }
+
     void showCursor() {
         HANDLE h = GetStdHandle(STD_OUTPUT_HANDLE);
         CONSOLE_CURSOR_INFO ci;
@@ -35,8 +35,8 @@ namespace scheduler {
         SetConsoleCursorInfo(h, &ci);
     }
 
-
     typedef long long ll;
+
     static int ymd(int y, int m, int d) { return y * 10000 + m * 100 + d; }
 
     static void splitTime(long long ymdhm, int& y, int& m, int& d, int& hh, int& mm) {
@@ -47,132 +47,128 @@ namespace scheduler {
         hh = int(ymdhm / 100);      mm = int(ymdhm % 100);
     }
 
-
-
     static string hhmm(long long ymdhm) {
         int y, m, d, h, mm; splitTime(ymdhm, y, m, d, h, mm);
-        if (h < 0) return "시간 미정";
-        ostringstream os; os << setw(2) << setfill('0') << h << ":" << setw(2) << mm;
+        if (h < 0) return "--:--";
+        ostringstream os;
+        os << setw(2) << setfill('0') << h << ":" << setw(2) << setfill('0') << mm;
         return os.str();
     }
 
     static int weekdayOf(int y, int m, int d) { // 1=Mon..7=Sun
-        std::tm tm{}; tm.tm_year = y - 1900; tm.tm_mon = m - 1; tm.tm_mday = d;
-        std::mktime(&tm); int w = tm.tm_wday; if (w == 0) w = 7; return w;
+        std::tm tm{};
+        tm.tm_year = y - 1900;
+        tm.tm_mon  = m - 1;
+        tm.tm_mday = d;
+        std::mktime(&tm);
+        int w = tm.tm_wday;
+        if (w == 0) w = 7;
+        return w;
     }
 
     static int lastDayOfMonth(int y, int m) {
         static int md[] = { 0,31,28,31,30,31,30,31,31,30,31,30,31 };
         if (m != 2) return md[m];
-        if ((y % 400 == 0) || (y % 4 == 0 && y % 100 != 0)) return 29; return 28;
+        if ((y % 400 == 0) || (y % 4 == 0 && y % 100 != 0)) return 29;
+        return 28;
     }
 
-    static void printTaskLine(Task* t) {   //gettype 수정하기
-        long long s, e; t->getTime(s, e);
-        string due;
+    // 날짜/시간 입력 보조 함수
+    static long long inputDateTime(const string& label) {
         int y, m, d, hh, mm;
-        splitTime(t->getEndDate(), y, m, d, hh, mm);
-        due += to_string(y); due += "년 ";
-        due += to_string(m); due += "월 ";
-        due += to_string(d); due += "일 ";
-        due += to_string(hh); due += "시 ";
-        due += to_string(mm); due += "분 ";
-        cout << "  [" << t->getTaskNum() << "] "
-            << t->getTaskName() << " "
-            << (t->isfinished() ? "(완료) " : "")
-            << hhmm(s) << " - " << hhmm(e)
-            << "  | type=" << t->getType()
-            << "  | due=" << due << "\n";
+        while (true) {
+            cout << "\n>> [" << label << "] 날짜 및 시간 입력\n";
+            cout << "   Format: YYYY MM DD HH MM (띄어쓰기로 구분)\n";
+            cout << "   입력: ";
+            
+            if (cin >> y >> m >> d >> hh >> mm) {
+                int ld = lastDayOfMonth(y, m);
+                if (m >= 1 && m <= 12 && d >= 1 && d <= ld &&
+                    hh >= 0 && hh <= 23 && mm >= 0 && mm <= 59) {
+                    
+                    return (long long)y * 100000000LL
+                         + (long long)m * 1000000LL
+                         + (long long)d * 10000LL
+                         + (long long)hh * 100LL
+                         + (long long)mm;
+                } else {
+                    cout << "   (!) 유효하지 않은 날짜/시간입니다.\n";
+                }
+            } else {
+                cin.clear();
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                cout << "   (!) 잘못된 입력 형식입니다. 숫자로 입력해주세요.\n";
+            }
+        }
     }
+
+    // 일정 타입 안내
+    static void printTaskTypeInfo() {
+        cout << "\n-----------------------------\n";
+        cout << " [일정 타입 코드]\n";
+        cout << " 0 : 일반 과제 (Deadline)\n";
+        cout << " 1 : 고정 일정 (수업/회의 등)\n";
+        cout << " 2 : 기타\n";
+        cout << "-----------------------------\n";
+    }
+
+    static void printTaskLine(Task* t) {
+        long long s, e;
+        t->getTime(s, e);
+
+        string dueStr = "";
+        if (t->getEndDate() > 0) {
+            int y, m, d, hh, mm;
+            splitTime(t->getEndDate(), y, m, d, hh, mm);
+            dueStr = to_string(m) + "/" + to_string(d) + " " + to_string(hh) + ":" + (mm < 10 ? "0" : "") + to_string(mm);
+        }
+
+        cout << "  [" << setw(2) << t->getTaskNum() << "] "
+             << (t->isfinished() ? "[v] " : "[ ] ")
+             << left << setw(20) << t->getTaskName()
+             << "| " << hhmm(s) << "~" << hhmm(e)
+             << "| Type:" << t->getType()
+             << "| Due: " << dueStr << "\n";
+    }
+
+    // ---- 시간 관련 TUI helpers ----
 
     void TUI::get_current_time(int& year, int& month, int& day) {
-        std::time_t now_utc = std::time(nullptr);
-        std::time_t kst_epoch = now_utc + 9 * 60 * 60; // UTC+9
-
-        // gmtime은 static tm*를 반환하므로 즉시 복사해서 사용
+        std::time_t now_utc   = std::time(nullptr);
+        std::time_t kst_epoch = now_utc + 9 * 60 * 60; 
         std::tm tm = *std::gmtime(&kst_epoch);
-
-        year = tm.tm_year + 1900;
-        month = tm.tm_mon + 1;   // 1..12
-        day = tm.tm_mday;      // 1..31
+        year  = tm.tm_year + 1900;
+        month = tm.tm_mon + 1;
+        day   = tm.tm_mday;
     }
 
     void TUI::get_next_day(int& year, int& month, int& day, int offset) {
-
         struct tm timeinfo = { 0 };
-        timeinfo.tm_year = year - 1900; // 1900년 기준
-        timeinfo.tm_mon = month - 1;    // 0~11
+        timeinfo.tm_year = year - 1900;
+        timeinfo.tm_mon  = month - 1;
         timeinfo.tm_mday = day;
-
-        // 필요하면 시간, 분, 초도 설정 가능
-        timeinfo.tm_hour = 0;
-        timeinfo.tm_min = 0;
-        timeinfo.tm_sec = 0;
-
-        // mktime을 이용해 time_t로 변환
-        time_t t = mktime(&timeinfo) + 9*60*60;
-        t += offset * (24 * 60 * 60);
-
-        timeinfo = *std::gmtime(&t);
-        year = timeinfo.tm_year + 1900;
-        month = timeinfo.tm_mon + 1;   // 1..12
-        day = timeinfo.tm_mday;      // 1..31
+        time_t t = mktime(&timeinfo) + offset * (24 * 60 * 60);
+        timeinfo = *std::localtime(&t); // localtime 사용 시 시스템 타임존 따름
+        year  = timeinfo.tm_year + 1900;
+        month = timeinfo.tm_mon + 1;
+        day   = timeinfo.tm_mday;
     }
 
     void TUI::get_next_week(int& year, int& month, int& day, int offset) {
-        struct tm timeinfo = { 0 };
-        timeinfo.tm_year = year - 1900; // 1900년 기준
-        timeinfo.tm_mon = month - 1;    // 0~11
-        timeinfo.tm_mday = day;
-
-        // 필요하면 시간, 분, 초도 설정 가능
-        timeinfo.tm_hour = 0;
-        timeinfo.tm_min = 0;
-        timeinfo.tm_sec = 0;
-
-        // mktime을 이용해 time_t로 변환
-        time_t t = mktime(&timeinfo) + 9 * 60 * 60;
-        t += offset * (7*24 * 60 * 60);
-
-        timeinfo = *std::gmtime(&t);
-        year = timeinfo.tm_year+1900;
-        month = timeinfo.tm_mon + 1;   // 1..12
-        day = timeinfo.tm_mday;      // 1..31
+        get_next_day(year, month, day, offset * 7);
     }
 
     void TUI::get_next_month(int& year, int& month, int& day, int offset) {
-       
         month += offset;
-        if (month == 0) {
-            month = 12;
-            year -= 1;
-        }
-        else if(month==13){
-            month = 1;
-            year += 1;
-        }
+        while (month > 12) { month -= 12; year++; }
+        while (month < 1)  { month += 12; year--; }
+        int ld = lastDayOfMonth(year, month);
+        if (day > ld) day = ld;
     }
 
     void TUI::get_first_day_of_week(int& year, int& month, int& day) {
-        tm tm{};
-        tm.tm_year = year - 1900;
-        tm.tm_mon = month - 1;   // 0..11
-        tm.tm_mday = day;
-        tm.tm_hour = 12;      // DST/타임존 영향 최소화 (한낮으로 설정)
-
-        // 날짜 정규화 + 요일 채우기 (tm_wday: 0=Sun..6=Sat)
-        if (std::mktime(&tm) == -1) return;
-
-        int wday = tm.tm_wday;                       // 0..6
-        int offset = (7 + wday - 1) % 7;      // 되돌아갈 일수
-
-        tm.tm_mday -= offset;                          // 주 시작으로 이동
-        if (std::mktime(&tm) == -1) return;
-
-        year = tm.tm_year + 1900;
-        month = tm.tm_mon + 1;
-        day = tm.tm_mday;
-        return;
+        int w = weekdayOf(year, month, day); // 1=Mon..7=Sun
+        get_next_day(year, month, day, -(w - 1));
     }
 
     // ---- TUI methods ----
@@ -180,193 +176,413 @@ namespace scheduler {
     void TUI::mainMenu() {
         hideCursor();
 
+        if (!c) c = new Calender();
+
         int year = 0, month = 0, day = 0;
         get_current_time(year, month, day);
+
+        int last_choice = 1; // 1:Month, 2:Week, 3:Day, 0:Menu
+
+        // 초기 진입 시 달력 표시
+        system("cls");
         showMonth(year, month);
-        int last_choice = 1;
 
-        if (!c) c = new Calender();
         while (true) {
-
-            int offset = 0;
-            if (last_choice < 4 && last_choice>0) {
-                int t = _getch();
-                switch (t) {
-                case 224: case 0: {
-                    t = _getch();
-                    switch (t) {
-                    case 75: offset = -1; break;
-                    case 77: offset = 1; break;
-                    }
-                } break;
-                default: last_choice = 0; break;
-                }
+            // 1. 달력/주간/일간 뷰 모드일 때 (방향키 입력 대기)
+            if (last_choice >= 1 && last_choice <= 3) {
+                cout << "\n[←/→: 날짜 이동]  [Other Key: 메인 메뉴]\n";
                 
-                switch (last_choice) {
-                case 1: system("cls"); get_next_month(year, month, day, offset); showMonth(year, month); break;
-                case 2: system("cls"); get_next_week(year, month, day, offset); showWeek(year, month, day);  break;
-                case 3: system("cls"); get_next_day(year, month, day, offset); showDay(year, month, day);   break;
+                int key = _getch();
+                if (key == 224 || key == 0) { // 방향키 감지
+                    key = _getch();
+                    int offset = 0;
+                    if (key == 75) offset = -1;      // Left
+                    else if (key == 77) offset = 1;  // Right
+                    
+                    if (offset != 0) {
+                        if (last_choice == 1) get_next_month(year, month, day, offset);
+                        else if (last_choice == 2) get_next_week(year, month, day, offset);
+                        else if (last_choice == 3) get_next_day(year, month, day, offset);
+                    }
+                    
+                    // 화면 갱신
+                    system("cls");
+                    if (last_choice == 1) showMonth(year, month);
+                    else if (last_choice == 2) showWeek(year, month, day);
+                    else if (last_choice == 3) showDay(year, month, day);
+                    continue; // 루프 처음으로 (계속 뷰 모드 유지)
+                } else {
+                    // 방향키가 아닌 키를 누르면 메인 메뉴 텍스트 모드로 전환
+                    last_choice = 0;
                 }
-                continue;
             }
-            
+
+            // 2. 메인 메뉴 텍스트 표시
             system("cls");
+            cout << "\n===== SCHEDULER MAIN MENU =====\n";
+            cout << " [1] 월별 보기 (Month View)\n";
+            cout << " [2] 주별 보기 (Week View)\n";
+            cout << " [3] 일별 보기 (Day View)\n";
+            cout << " ---------------------------\n";
+            cout << " [4] 작업 추가 (Add Task)\n";
+            cout << " [5] 작업 수정 (Edit Task)\n";
+            cout << " [6] 작업 삭제 (Delete Task)\n";
+            cout << " [7] 통계 보기 (Statistics)\n";
+            cout << " [8] 간격 변경 (Change Interval)\n";
+            cout << " ---------------------------\n";
+            cout << " [9] 고정 일정 추가 (Fixed Task)\n";
+            cout << " [A] 작업 불가 시간 설정 (Set Blocked Time)\n";
+            cout << " [0] 종료 (Exit)\n";
+            cout << "===============================\n";
+            cout << " 명령 선택 >> ";
 
-            cout << "\n===== SCHEDULER (TUI) =====\n"
-                << "1) 월 보기   2) 주 보기   3) 일 보기\n"
-                << "4) 작업 추가 5) 작업 수정 6) 작업 삭제\n"
-                << "7) 통계      8) 간격변경   0) 종료\n";
+            int cmd = -1;
+            int ch = _getch(); // 키 입력 (화면에 안 보임)
 
+            if (ch == '0') break;
+            if (ch >= '1' && ch <= '9') cmd = ch - '0';
+            if (ch == 'a' || ch == 'A') cmd = 10;
 
-            int cmd; if (!(cmd = (_getch()-'0'))) return;
-            if (cmd == 0) break;
+            system("cls"); // 메뉴 선택 후 화면 클리어
 
-
-            get_current_time(year, month, day);
-            system("cls");
+            // 선택에 따른 동작 수행
             switch (cmd) {
-            case 1: showMonth(year, month); last_choice = 1; break;
-            case 2: showWeek(year, month, day); last_choice = 2; break;
-            case 3: showDay(year, month, day); last_choice = 3;  break;
-            case 4: showCursor(); addTask(); last_choice = 4; hideCursor();  break;
-            case 5: showCursor(); editTask(); last_choice = 5; hideCursor(); break;
-            case 6: showCursor(); deleteTask(); last_choice = 6; hideCursor(); break;
-            case 7: showStatistics(); last_choice = 7; break;
-            case 8: showCursor(); changeInterval(); last_choice = 8; hideCursor(); break;
-            default: last_choice = 0; cout << "메뉴를 다시 선택하세요.\n";
+            case 1: // Month View
+                showMonth(year, month);
+                last_choice = 1;
+                break;
+            case 2: // Week View
+                showWeek(year, month, day);
+                last_choice = 2;
+                break;
+            case 3: // Day View
+                showDay(year, month, day);
+                last_choice = 3;
+                break;
+            
+            case 4: // Add Task
+                showCursor();
+                addTask();
+                hideCursor();
+                cout << "\n(아무 키나 누르면 메뉴로 돌아갑니다)";
+                _getch();
+                last_choice = 0; // 작업 후엔 메뉴로
+                break;
+            case 5: // Edit Task
+                showCursor();
+                editTask();
+                hideCursor();
+                cout << "\n(아무 키나 누르면 메뉴로 돌아갑니다)";
+                _getch();
+                last_choice = 0;
+                break;
+            case 6: // Delete Task
+                showCursor();
+                deleteTask();
+                hideCursor();
+                cout << "\n(아무 키나 누르면 메뉴로 돌아갑니다)";
+                _getch();
+                last_choice = 0;
+                break;
+            case 7: // Statistics
+                showStatistics();
+                cout << "\n(아무 키나 누르면 메뉴로 돌아갑니다)";
+                _getch();
+                last_choice = 0;
+                break;
+            case 8: // Change Interval
+                showCursor();
+                changeInterval();
+                hideCursor();
+                cout << "\n(아무 키나 누르면 메뉴로 돌아갑니다)";
+                _getch();
+                last_choice = 0;
+                break;
+            case 9: // Add Fixed Task
+                showCursor();
+                addFixedTask();
+                hideCursor();
+                cout << "\n(아무 키나 누르면 메뉴로 돌아갑니다)";
+                _getch();
+                last_choice = 0;
+                break;
+            case 10: // Set Uninterrupted Time
+                showCursor();
+                setUninterruptedTime();
+                hideCursor();
+                cout << "\n(아무 키나 누르면 메뉴로 돌아갑니다)";
+                _getch();
+                last_choice = 0;
+                break;
+            default:
+                // 잘못된 입력 등은 무시하고 다시 메뉴
+                last_choice = 0; 
+                break;
             }
         }
     }
 
-
-    // 월 뷰: YYYY MM 입력 → 월 달력 + 일자별 작업수
     void TUI::showMonth(int year, int month) {
-        int y=year, m=month;
-        /*cout << "연도 월 입력 (예: 2025 10): ";
-        cin >> y >> m;*/
+        int y = year, m = month;
         vector<Task*> tasks;
         int dummyDay = 1;
-        if (!c->get_Month(tasks, y, m, dummyDay)) {
-            cout << "해당 월 데이터가 없습니다.\n"; //return;
-        }
-        // 일자별 개수 집계
+        
+        // 데이터가 없어도 달력은 그려야 하므로 반환값 무시하고 진행
+        c->get_Month(tasks, y, m, dummyDay);
+
         map<int, int> cnt;
         for (Task* t : tasks) {
-            long long s, e; t->getTime(s, e);
-            int yy, MM, dd, hh, mm; splitTime(s, yy, MM, dd, hh, mm);
-            int date = (s >= 0) ? (yy * 10000 + MM * 100 + dd) : t->getEndDate();
-            int d = date % 100; cnt[d]++;
+            long long s, e;
+            t->getTime(s, e);
+            int dateVal;
+            if (s >= 0) {
+                int yy, MM, dd, hh, mm;
+                splitTime(s, yy, MM, dd, hh, mm);
+                dateVal = yy * 10000 + MM * 100 + dd;
+            } else {
+                dateVal = (int)(t->getEndDate() / 10000); // Deadline 기준
+            }
+            int d = dateVal % 100;
+            cnt[d]++;
         }
 
-        int firstW = weekdayOf(y, m, 1); // 1..7
-        int lastD = lastDayOfMonth(y, m);
+        int firstW = weekdayOf(y, m, 1);
+        int lastD  = lastDayOfMonth(y, m);
 
-        cout << "\n=== " << y << "." << m << " ===\n";
+        cout << "\n   <<<  " << y << "년 " << m << "월  >>>\n";
+        cout << "-----------------------------\n";
         cout << " Mo Tu We Th Fr Sa Su\n";
+
         int col = 1;
-        for (int i = 1; i < firstW; i++) { cout << "   "; col++; }
-        for (int d = 1; d <= lastD; ++d) {
-            cout << setw(2) << d;
-            if (cnt[d]) cout << "*"; else cout << " ";
-            if (col % 7 == 0) cout << "\n"; else cout << " ";
+        for (int i = 1; i < firstW; ++i) {
+            cout << "   ";
             col++;
         }
-        cout << "\n* 표시는 해당 일에 작업이 존재함을 의미\n";
+
+        for (int d = 1; d <= lastD; ++d) {
+            cout << setw(3) << d;
+            if (col % 7 == 0) cout << "\n";
+            col++;
+        }
+        if ((col - 1) % 7 != 0) cout << "\n";
+        cout << "-----------------------------\n";
+        
+        if (tasks.empty()) {
+            cout << " * 이 달에는 등록된 일정이 없습니다.\n";
+        } else {
+            cout << " * 총 " << tasks.size() << "개의 일정이 있습니다. (상세보기: 일간/주간)\n";
+        }
     }
 
-    // 주 뷰: 기준 YYYY MM DD 입력 → 그 주(월~일) 각 일자와 작업 목록
     void TUI::showWeek(int year, int month, int day) {
-        int y=year, m=month, d=day;
-        get_first_day_of_week(y, m, d);
-        /*cout << "연도 월 일 입력 (예: 2025 10 28): ";
-        cin >> y >> m >> d;*/
+        int y = year, m = month, d = day;
+        get_first_day_of_week(y, m, d); // 해당 주의 월요일로 이동
+
+        cout << "\n   <<< 주간 일정 (" << m << "/" << d << " 주) >>>\n";
+
         vector<Task*> tasks;
         c->get_Week(tasks, y, m, d);
-        // 날짜별 그룹핑
-        map<int, vector<Task*> > byDate;
-        int count = 0;
+
+        map<int, vector<Task*>> byDate;
         for (Task* t : tasks) {
-            long long s, e; t->getTime(s, e);
-            int yy, MM, dd, hh, mm;
+            long long s, e;
+            t->getTime(s, e);
             int key;
-            if (s >= 0) { splitTime(s, yy, MM, dd, hh, mm); key = ymd(yy, MM, dd); }
-            else { key = int(t->getEndDate() / 10000); } //무슨 용도지?
+            if (s >= 0) {
+                int yy, MM, dd, hh, mm;
+                splitTime(s, yy, MM, dd, hh, mm);
+                key = ymd(yy, MM, dd);
+            } else {
+                key = int(t->getEndDate() / 10000);
+            }
             byDate[key].push_back(t);
         }
-        for (map<int, vector<Task*> >::iterator it = byDate.begin(); it != byDate.end(); ++it) {
-            int dateKey = it->first;
-            vector<Task*>& vec = it->second;
-            cout << "\n[" << dateKey << "]\n";
-            for (Task* t : vec) printTaskLine(t);
+
+        // 월~일 순회하며 출력
+        int curY = y, curM = m, curD = d;
+        for (int i = 0; i < 7; i++) {
+            int key = ymd(curY, curM, curD);
+            cout << " [" << curM << "/" << curD << "] ";
+            
+            if (byDate[key].empty()) {
+                cout << "-\n";
+            } else {
+                cout << "\n";
+                for (Task* t : byDate[key]) {
+                    printTaskLine(t);
+                }
+            }
+            get_next_day(curY, curM, curD, 1);
         }
-        if (byDate.empty()) cout << "이번 주 일정 없음\n";
     }
 
-    // 일 뷰: YYYY MM DD 입력 → 해당 일 작업 출력
     void TUI::showDay(int year, int month, int day) {
-        int y=year, m=month, d=day;
-        /*; cout << "연도 월 일 입력 (예: 2025 10 28): ";
-        cin >> y >> m >> d;*/
+        int y = year, m = month, d = day;
         vector<Task*> tasks;
-        /*if (!c->get_Day(tasks, y, m, d)) {
-            cout << "해당 일 일정 없음\n"; return;
-        }*/
-        cout << "\n[" << y << "-" << m << "-" << d << "] 일정\n";
-        for (Task* t : tasks) printTaskLine(t);
-        if (tasks.empty()) cout << "일정 없음\n";
+        c->get_Day(tasks, y, m, d);
+
+        cout << "\n   <<< " << y << "-" << m << "-" << d << " 상세 일정 >>>\n";
+        cout << "------------------------------------------------\n";
+        if (tasks.empty()) {
+            cout << "  (일정이 없습니다)\n";
+        } else {
+            for (Task* t : tasks) printTaskLine(t);
+        }
+        cout << "------------------------------------------------\n";
     }
 
-    // 작업 추가
+    // ---- 작업 관련 기능 ----
+
     void TUI::addTask() {
-        string name; ll dur, due; int type;
+        cout << "\n[새 작업 추가]\n";
+        string name;
+        ll dur, due;
+        int type;
+
         cout << "이름: ";
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
         getline(cin, name);
-        cout << "예상소요(분): "; cin >> dur;
-        cout << "마감일(YYYYMMDDhhmm): "; cin >> due;
-        cout << "타입(정수): "; cin >> type;
+
+        cout << "예상 소요(분): ";
+        while (!(cin >> dur)) {
+            cin.clear(); cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            cout << "숫자만 입력하세요: ";
+        }
+
+        due = inputDateTime("마감 기한");
+
+        printTaskTypeInfo();
+        cout << "타입 번호 입력: ";
+        cin >> type;
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
         if (c->addTask(name, dur, due, type))
-            cout << "추가 완료\n";
-        else cout << "추가 실패\n";
+            cout << ">> 추가 성공!\n";
+        else
+            cout << ">> 추가 실패 (중복되거나 유효하지 않음)\n";
     }
 
-    // 작업 수정
     void TUI::editTask() {
-        int num; cout << "수정할 TaskNum: "; cin >> num;   //수정할 수 있는 task 목록을 출력
-        string name; ll dur, due; int type;
+        cout << "\n[작업 수정]\n";
+        int num;
+        cout << "수정할 Task 번호: ";
+        while (!(cin >> num)) {
+            cin.clear(); cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            cout << "숫자만 입력하세요: ";
+        }
+        
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+        string name;
+        ll dur, due;
+        int type;
+
         cout << "새 이름: ";
-        cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
         getline(cin, name);
-        cout << "새 소요(분): "; cin >> dur;  
-        cout << "새 마감(YYYYMMDDhhmm): "; cin >> due;
-        cout << "새 타입: "; cin >> type;
+
+        cout << "새 소요(분): ";
+        cin >> dur;
+
+        due = inputDateTime("새 마감 기한");
+
+        printTaskTypeInfo();
+        cout << "새 타입 번호: ";
+        cin >> type;
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
         if (c->editTask(num, name, dur, due, type))
-            cout << "수정 완료\n";
-        else cout << "수정 실패\n";
+            cout << ">> 수정 성공!\n";
+        else
+            cout << ">> 수정 실패\n";
     }
 
-    // 작업 삭제
     void TUI::deleteTask() {
-        int num; cout << "삭제할 TaskNum: "; cin >> num;  //수정할 수 있는 task 목록 출력
+        cout << "\n[작업 삭제]\n";
+        int num;
+        cout << "삭제할 Task 번호: ";
+        cin >> num;
+        // 다음 getline 대비 버퍼 정리
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        
         if (c->deleteTask(num))
-            cout << "삭제 완료\n";
-        else cout << "삭제 실패\n";
+            cout << ">> 삭제 성공!\n";
+        else
+            cout << ">> 삭제 실패 (존재하지 않는 번호)\n";
     }
 
-    // 통계 보기
     void TUI::showStatistics() {
+        system("cls");
+        cout << "\n[ 통계 정보 ]\n";
         auto st = c->getStatistics();
-        cout << "완료:" << st.finished_count << " / 미완료:" << st.unfinished_count
-            << " / 남은 작업:" << st.to_do_count << "\n";
+        cout << " - 완료된 작업 : " << st.finished_count << "\n";
+        cout << " - 미완료 작업 : " << st.unfinished_count << "\n";
+        cout << " - 남은 작업   : " << st.to_do_count << "\n";
     }
 
-    // 스케줄 간격 변경
     void TUI::changeInterval() {
-        int k; cout << "새 interval(분): "; cin >> k;
+        cout << "\n[ 스케줄링 간격 변경 ]\n";
+        int k;
+        cout << "새 분 단위 간격 (예: 30): ";
+        cin >> k;
+        // 다음 getline 대비 버퍼 정리
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
         vector<Task*> q, f;
-        if (c->changeInterval(k, q, f))
-            cout << "간격 변경 및 재스케줄 완료. queued=" << q.size() << ", failed=" << f.size() << "\n";
-        else cout << "변경 실패\n";
+        if (c->changeInterval(k, q, f)) {
+            cout << ">> 변경 및 재스케줄링 완료.\n";
+            cout << "   (재배치 대기: " << q.size() << ", 배치 실패: " << f.size() << ")\n";
+        } else {
+            cout << ">> 변경 실패\n";
+        }
+    }
+
+    // 요구사항: 고정 일정 추가
+    void TUI::addFixedTask() {
+        cout << "\n[ 고정 일정(수업 등) 추가 ]\n";
+        
+        string name;
+        cout << "일정 이름: ";
+        getline(cin, name);
+
+        ll start = inputDateTime("시작 시간");
+        ll end   = inputDateTime("종료 시간");
+
+        if (start >= end) {
+            cout << ">> 오류: 종료 시간이 시작 시간보다 빨라야 합니다.\n";
+            return;
+        }
+
+        int type;
+        printTaskTypeInfo();
+        cout << "타입 번호 입력(주로 1): ";
+        cin >> type;
+        // 다음 getline 대비 버퍼 정리
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+        if (c->addFixedTask(name, start, end, type)) 
+            cout << ">> 고정 일정 추가 성공!\n";
+        else
+            cout << ">> 고정 일정 추가 실패 (시간 충돌 등)\n";
+    }
+
+    // 요구사항: 작업 불가 시간대 추가
+    void TUI::setUninterruptedTime() {
+        cout << "\n[ 작업 불가 시간대 설정 ]\n";
+        cout << " (잠자는 시간, 식사 시간 등 작업을 할당하지 않을 구간)\n";
+
+        ll start = inputDateTime("시작 시간");
+        ll end   = inputDateTime("종료 시간");
+
+        if (start >= end) {
+            cout << ">> 오류: 시간 범위가 잘못되었습니다.\n";
+            return;
+        }
+
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+        if (c->setUninterruptedTime(start, end))
+            cout << ">> 설정 완료!\n";
+        else
+            cout << ">> 설정 실패\n";
     }
 
 } // namespace scheduler
@@ -378,3 +594,4 @@ int main(){
     app.mainMenu();
 }
 */
+
