@@ -362,6 +362,26 @@ namespace scheduler {
 
 	Calender::calStats Calender::getStatistics() {
 
+		// 1. 현재 벡터 사이즈를 기준으로 통계 변수(stat) 최신화
+		stat.finished_count = finished.size();    // 완료된 작업 수
+		stat.unfinished_count = failed.size();    // 실패한 작업 수
+		stat.to_do_count = queued.size();         // 해야 할 작업 수
+		
+		// 2. 작업 종류(Type)별 통계도 다시 계산 (기존 데이터 오차 방지
+			for (int i = 0; i < 100; i++) {
+			stat.tasktypes[i] = 0;
+		}
+		
+		//    모든 작업을 순회하며 타입별 카운트 집계
+		for (auto const& pair : allTasks) {
+			Task* t = pair.second;
+			int type = t->getType();
+			// 유효한 타입 인덱스인지 확인 후 증가
+			if (type >= 0 && type < 100) {
+				stat.tasktypes[type]++;
+			}
+		}
+		
 		return stat;
 	}
 
@@ -503,4 +523,5 @@ namespace scheduler {
 
 		return;
 	}
+
 }
