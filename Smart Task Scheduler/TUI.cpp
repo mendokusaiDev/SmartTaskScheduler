@@ -360,7 +360,15 @@ namespace scheduler {
         }
 
         for (int d = 1; d <= lastD; ++d) {
-            cout << setw(3) << d;
+
+            // [수정] 작업이 있으면 "숫자*", 없으면 " 숫자" 출력
+            if (cnt[d] > 0) {
+                cout << setw(3) << d << "*"; // 예: " 5*"
+            }
+            else {
+                cout << setw(3) << d;        // 예: "  5"
+            }
+
             if (col % 7 == 0) cout << "\n";
             col++;
         }
@@ -463,6 +471,26 @@ namespace scheduler {
 
     void TUI::editTask() {
         cout << "\n[작업 수정]\n";
+
+        cout << "------------------------------------------------\n";
+        cout << " 현재 대기열(Queue)에 있는 작업 목록\n";
+        cout << "------------------------------------------------\n";
+
+        vector<Task*> queuedList;
+        c->getQueuedTasks(queuedList); // [변경] getAllTasks -> getQueuedTasks
+
+        if (queuedList.empty()) {
+            cout << "  (수정할 수 있는 대기 중인 작업이 없습니다)\n";
+            cout << "------------------------------------------------\n";
+            // 작업이 없으면 바로 돌아가는 게 좋습니다.
+            return;
+        }
+
+        for (Task* t : queuedList) {
+            printTaskLine(t);
+        }
+        cout << "------------------------------------------------\n";
+
         int num;
         cout << "수정할 Task 번호: ";
         while (!(cin >> num)) {
@@ -569,8 +597,11 @@ namespace scheduler {
         cout << "\n[ 작업 불가 시간대 설정 ]\n";
         cout << " (잠자는 시간, 식사 시간 등 작업을 할당하지 않을 구간)\n";
 
+        // 주의: Scheduler 로직에 따르면 YYYYMMDDHHMM이 아니라 HHMM(시간/분)만 필요할 수 있습니다.
+        // 현재 로직대로라면 날짜까지 포함된 큰 숫자가 들어가게 됩니다. 
+        // 만약 매일 반복되는 시간을 원하신다면 입력 방식을 변경해야 할 수도 있습니다.
         ll start = inputDateTime("시작 시간");
-        ll end   = inputDateTime("종료 시간");
+        ll end = inputDateTime("종료 시간");
 
         if (start >= end) {
             cout << ">> 오류: 시간 범위가 잘못되었습니다.\n";
@@ -579,10 +610,9 @@ namespace scheduler {
 
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
-        if (c->setUninterruptedTime(start, end))
-            cout << ">> 설정 완료!\n";
-        else
-            cout << ">> 설정 실패\n";
+        // [수정된 부분] if문을 제거하고 직접 호출
+        c->setUninterruptedTime(start, end);
+        cout << ">> 설정 완료!\n";
     }
 
 } // namespace scheduler

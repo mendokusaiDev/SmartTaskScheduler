@@ -11,6 +11,9 @@ void whenExit() {
 
 int main() {
 
+	system("chcp 65001");
+	system("cls");
+
 	atexit(whenExit);
 	app.mainMenu();
 

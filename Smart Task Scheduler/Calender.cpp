@@ -117,6 +117,7 @@ namespace scheduler {
 			allTasks[cur]->getTime(starttime, endtime);
 			if (endtime < curtime) {
 				markFinished(cur);
+				finished.push_back(cur);
 				continue;
 			}
 			newq.push_back(allTasks[cur]);
@@ -124,7 +125,7 @@ namespace scheduler {
 
 		//2. failed에 있는 것 중 enddate가 안지난것만 남기기
 		for (int cur : failed) {
-			int enddate = allTasks[cur]->getEndDate();
+			long long enddate = allTasks[cur]->getEndDate();
 			if (enddate > curtime_2) continue;
 			newq.push_back(allTasks[cur]);
 		}
@@ -137,6 +138,11 @@ namespace scheduler {
 
 	void Calender::remakeCal(std::vector<Task*>& newq, std::vector<Task*>& newf) {
 		//0. 스케줄 다시 만들기
+		for (Task* t : newq) {
+			if (!t->isFixed()) {
+				t->resetTime();
+			}
+		}
 		S->makeSchedule(newq, newf);
 		
 		//1. 이전에 할당한 작업 해제  (최적화 필요)
@@ -207,7 +213,13 @@ namespace scheduler {
 
 		refreshCal();
 
-		return true;
+		// [수정] 실제로 성공 목록(queued)에 들어갔는지 확인
+		for (int taskID : queued) {
+			if (taskID == this->tasks_count - 1) { // 방금 추가한 ID와 일치하는지
+				return true;
+			}
+		}
+		return false; // 없으면 실패(failed로 빠짐)
 	}
 
 	bool Calender::addFixedTask(std::string name, long long startime, long long endtime, int type) {
@@ -337,6 +349,16 @@ namespace scheduler {
 		return true;
 	}
 
+	//  큐에 있는(스케줄링 성공한) 작업 목록만 반환
+	void Calender::getQueuedTasks(std::vector<Task*>& tasks) {
+		// queued 벡터에는 스케줄링된 작업의 ID(int)들이 들어있습니다.
+		for (int taskNum : this->queued) {
+			// 안전하게 찾기 위해 find 사용
+			if (allTasks.find(taskNum) != allTasks.end()) {
+				tasks.push_back(allTasks[taskNum]);
+			}
+		}
+	}
 
 	Calender::calStats Calender::getStatistics() {
 
@@ -457,7 +479,7 @@ namespace scheduler {
 		int failedN = -1;
 		for (int i = 0; i < failedCount; i++) {
 			ifs.read((char*)&failedN, sizeof(int));
-			queued.push_back(failedN);
+			failed.push_back(failedN);
 		}
 
 		//finished 저장하기
@@ -466,7 +488,7 @@ namespace scheduler {
 		int finN = -1;
 		for (int i = 0; i < finCount; i++) {
 			ifs.read((char*)&finN, sizeof(int));
-			queued.push_back(finN);
+			finished.push_back(finN);
 		}
 
 		ifs.read((char*)&stat, sizeof(calStats));  //통계 저장하기

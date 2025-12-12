@@ -65,6 +65,8 @@ namespace scheduler {
 		bool get_Day(std::vector<Task*> & tasks, int year, int month, int day);
 		bool get_Week(std::vector<Task*> & tasks, int year, int month, int day);
 		bool get_Month(std::vector<Task*> & tasks, int year, int month, int day);
+
+		void getQueuedTasks(std::vector<Task*>& tasks); // 모든 작업 목록을 가져오는 함수
 		calStats getStatistics();
 
 		bool changeInterval(int interval, std::vector<Task*> & queued, std::vector<Task*> & failed);  //새로운 queued하고 failed 반환해줌.
