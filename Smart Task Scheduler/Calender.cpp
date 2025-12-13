@@ -353,6 +353,8 @@ namespace scheduler {
 
 		Task* cur = allTasks[taskNum];
 		stat.tasktypes[cur->getType()]--;
+		cal_Day* temp = find((int)(cur->getstarttime() / 1000));
+		temp->freeTaskNum(taskNum);
 		cur->changeTask(name, duedate, dur, type);
 		stat.tasktypes[type]++;
 		std::vector<Task*> newq, newf;
@@ -388,7 +390,6 @@ namespace scheduler {
 	void Calender::markFinished(int taskNum) {  //일단 마킹만 시행
 		allTasks[taskNum]->done();
 		stat.finished_count++;
-		stat.tasktypes[allTasks[taskNum]->getType()]++;
 		stat.to_do_count--;
 		refreshCal();
 		return;

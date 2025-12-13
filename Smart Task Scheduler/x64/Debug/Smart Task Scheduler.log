@@ -120,9 +120,9 @@ G:\Smart Task Scheduler\Smart Task Scheduler\Smart Task Scheduler\Calender.cpp(2
 G:\Smart Task Scheduler\Smart Task Scheduler\Smart Task Scheduler\Calender.cpp(182,37): warning C4244: '인수': '__int64'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
 G:\Smart Task Scheduler\Smart Task Scheduler\Smart Task Scheduler\Calender.cpp(198,38): warning C4244: '인수': '__int64'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
 G:\Smart Task Scheduler\Smart Task Scheduler\Smart Task Scheduler\Calender.cpp(304,13): warning C4244: '초기화 중': '__int64'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-G:\Smart Task Scheduler\Smart Task Scheduler\Smart Task Scheduler\Calender.cpp(493,16): warning C4267: '초기화 중': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-G:\Smart Task Scheduler\Smart Task Scheduler\Smart Task Scheduler\Calender.cpp(502,12): warning C4267: '초기화 중': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-G:\Smart Task Scheduler\Smart Task Scheduler\Smart Task Scheduler\Calender.cpp(512,18): warning C4267: '초기화 중': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-G:\Smart Task Scheduler\Smart Task Scheduler\Smart Task Scheduler\Calender.cpp(518,18): warning C4267: '초기화 중': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-G:\Smart Task Scheduler\Smart Task Scheduler\Smart Task Scheduler\Calender.cpp(524,21): warning C4267: '초기화 중': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+G:\Smart Task Scheduler\Smart Task Scheduler\Smart Task Scheduler\Calender.cpp(494,16): warning C4267: '초기화 중': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+G:\Smart Task Scheduler\Smart Task Scheduler\Smart Task Scheduler\Calender.cpp(503,12): warning C4267: '초기화 중': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+G:\Smart Task Scheduler\Smart Task Scheduler\Smart Task Scheduler\Calender.cpp(513,18): warning C4267: '초기화 중': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+G:\Smart Task Scheduler\Smart Task Scheduler\Smart Task Scheduler\Calender.cpp(519,18): warning C4267: '초기화 중': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+G:\Smart Task Scheduler\Smart Task Scheduler\Smart Task Scheduler\Calender.cpp(525,21): warning C4267: '초기화 중': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
   Smart Task Scheduler.vcxproj -> G:\Smart Task Scheduler\Smart Task Scheduler\x64\Debug\Smart Task Scheduler.exe
