@@ -353,8 +353,10 @@ namespace scheduler {
 
 		Task* cur = allTasks[taskNum];
 		stat.tasktypes[cur->getType()]--;
-		cal_Day* temp = find((int)(cur->getstarttime() / 1000));
-		temp->freeTaskNum(taskNum);
+		int ttt = cur->getstarttime() / 10000;
+		cal_Day* temp = find(ttt);
+		if(temp!=nullptr)
+			temp->freeTaskNum(taskNum);
 		cur->changeTask(name, duedate, dur, type);
 		stat.tasktypes[type]++;
 		std::vector<Task*> newq, newf;
@@ -375,6 +377,11 @@ namespace scheduler {
 
 		Task* cur = allTasks[taskNum];
 		stat.tasktypes[cur->getType()]--;
+		int ttt = cur->getstarttime() / 10000;
+		cal_Day* temp = find(ttt);
+		if (temp != nullptr)
+			temp->freeTaskNum(taskNum);
+
 		long long dur = diffMinutes(starttime, endtime);
 		cur->changeFixedTask(name, starttime, endtime, dur, type);
 		stat.tasktypes[type]++;

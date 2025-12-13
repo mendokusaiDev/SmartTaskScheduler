@@ -35,7 +35,7 @@ namespace scheduler {
 	}
 
 	void cal_Day::freeTaskNum(int tasknum) {
-		LinkedList::deleteTask(Task_headptr, tasknum);
+		LinkedList::deleteTask(this->Task_headptr, tasknum);
 	}
 
 	cal_Day::cal_Day(int year, int month, int day) {   //cal_Day constructor

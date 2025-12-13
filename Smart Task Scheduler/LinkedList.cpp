@@ -52,7 +52,8 @@ namespace scheduler {
 			return;
 		}
 
-
+		if (cur == nullptr)
+			return;
 		prev->setLink(cur->getLink());
 		delete cur;
 
