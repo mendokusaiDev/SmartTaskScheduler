@@ -71,8 +71,9 @@ namespace scheduler {
 
 		bool changeInterval(int interval, std::vector<Task*> & queued, std::vector<Task*> & failed);  //새로운 queued하고 failed 반환해줌.
 		std::string task_type[10] = {  //여기에 Task 종류 추가
-		"Other",
-		"School Homework"
+		"과제",
+		"약속",
+		"기타"
 		};
 
 	};

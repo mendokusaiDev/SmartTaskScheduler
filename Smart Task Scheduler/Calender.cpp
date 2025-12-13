@@ -8,12 +8,31 @@
 
 #include <fstream>
 
+
 namespace scheduler {
 
 	//////////////////////////////////
 	//Calender관련
 
 	//private:
+
+	long long diffMinutes(long long a, long long b) {
+		auto to_time_t = [](long long x) {
+			std::tm t{};
+			t.tm_min = x % 100; x /= 100;
+			t.tm_hour = x % 100; x /= 100;
+			t.tm_mday = x % 100; x /= 100;
+			t.tm_mon = (x % 100) - 1; x /= 100; // 0~11
+			t.tm_year = (x - 1900);             // 1900 기준
+			t.tm_isdst = -1;                    // DST 자동 보정
+			return std::mktime(&t);
+			};
+
+		time_t ta = to_time_t(a);
+		time_t tb = to_time_t(b);
+
+		return llabs((tb - ta) / 60);
+	}
 
 	void Calender::get_current_time(int& year, int& month, int& day, int& hour, int& minute) {
 		std::time_t now_utc = std::time(nullptr);
@@ -108,8 +127,8 @@ namespace scheduler {
 	void Calender::refreshCal() {   //시간에 따른 calender 갱신
 		int year, month, day, hour, minute;
 		get_current_time(year, month, day, hour, minute);
-		long long curtime = minute + hour * 100 + day * 10000 + month * 1000000LL + year * 100000000LL;
-		int curtime_2 = day + month * 100 + year * 10000;
+		long long curtime = (long long)(minute + hour * 100 + day * 10000 + month * 1000000LL + year * 100000000LL);
+		//int curtime_2 = day + month * 100 + year * 10000;
 		std::vector<Task*> newq, newf;
 		//1. 먼저 queue에 있는 작업 완료 표시, 완료 안된것은 newq에 push
 		for (int cur : queued) {
@@ -126,7 +145,7 @@ namespace scheduler {
 		//2. failed에 있는 것 중 enddate가 안지난것만 남기기
 		for (int cur : failed) {
 			long long enddate = allTasks[cur]->getEndDate();
-			if (enddate > curtime_2) continue;
+			if (enddate < curtime) continue;
 			newq.push_back(allTasks[cur]);
 		}
 
@@ -225,7 +244,9 @@ namespace scheduler {
 	bool Calender::addFixedTask(std::string name, long long startime, long long endtime, int type) {
 		refreshCal();
 
-		Task* t = new Task(1, name, startime, endtime, type, tasks_count);  //고정 일정
+		long long duration = diffMinutes(startime, endtime);
+
+		Task* t = new Task(1, name, startime, endtime, duration, type, tasks_count);  //고정 일정
 		this->allTasks[this->tasks_count] = t;
 		this->tasks_count++;
 
@@ -237,7 +258,7 @@ namespace scheduler {
 
 		remakeCal(tempq, tempf);
 
-		refreshCal();
+		//refreshCal();
 
 		return true;
 	}

@@ -106,8 +106,8 @@ namespace scheduler {
     static void printTaskTypeInfo() {
         cout << "\n-----------------------------\n";
         cout << " [일정 타입 코드]\n";
-        cout << " 0 : 일반 과제 (Deadline)\n";
-        cout << " 1 : 고정 일정 (수업/회의 등)\n";
+        cout << " 0 : 과제 (Deadline)\n";
+        cout << " 1 : 약속 (수업/회의 등)\n";
         cout << " 2 : 기타\n";
         cout << "-----------------------------\n";
     }
@@ -581,7 +581,7 @@ namespace scheduler {
 
         int type;
         printTaskTypeInfo();
-        cout << "타입 번호 입력(주로 1): ";
+        cout << "타입 번호 입력: ";
         cin >> type;
         // 다음 getline 대비 버퍼 정리
         cin.ignore(numeric_limits<streamsize>::max(), '\n');

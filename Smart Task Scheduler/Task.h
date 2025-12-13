@@ -20,7 +20,7 @@ namespace scheduler {
 
 	public:
 		Task(std::string name, long long enddate, long long duration, int type, int taskNum);
-		Task(bool fixed, std::string name, long long starttime, long long endtime, int type, int taskNum);
+		Task(bool fixed, std::string name, long long starttime, long long endtime, long long duration, int type, int taskNum);
 		Task(std::string name, saveFile* f);
 		void changeTask(std::string name, long long enddate, long long duration, int type);
 		int getTaskNum();
