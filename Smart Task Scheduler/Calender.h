@@ -34,11 +34,12 @@ namespace scheduler {
 			int finished_count; //완료한 작업
 			int unfinished_count;  //완료하지 못한 작업
 			int to_do_count;  //앞으로 남은 작업의 개수
+			int total_task_count; //현재까지 추가된 작업의 개수 (지운거 제외)
 			int tasktypes[100];   //작업의 종류를 저장하는 배열
 		} calStats;   //통계 저장
 
 
-		calStats stat = { 0,0,0,{0, } };
+		calStats stat = { 0,0,0,0, {0, } };
 
 		void refreshCal();
 		void remakeCal(std::vector<Task*>& newq, std::vector<Task*>& newf);
@@ -57,7 +58,8 @@ namespace scheduler {
 		void restore();
 		bool addTask(std::string name, long long dur, long long duedate, int type);
 		bool deleteTask(int taskNum);
-		bool editTask(int taskNum, std::string name, int dur, int duedate, int type);
+		bool editTask(int taskNum, std::string name, long long dur, long long duedate, int type);
+		bool editTask(int taskNum, std::string name, long long startime, long long endtime, int type, bool isFixed);
 		void markFinished(int taskNum);
 		bool addFixedTask(std::string name, long long startime, long long endtime, int type);
 		void setUninterruptedTime(long long start, long long end);

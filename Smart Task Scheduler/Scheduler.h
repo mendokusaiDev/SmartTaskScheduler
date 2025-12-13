@@ -29,8 +29,13 @@ namespace scheduler {
 
         // 함수 선언부에서는 Task* 포인터만 쓰므로 Task의 구체적 정의가 없어도 됨
         void makeSchedule(std::vector<Task*>& original, std::vector<Task*>& failed);
+        void getUninterruptedTime(long long& start, long long& end);
 
         // 생성자
-        Scheduler(long long time) { this->interval = time; }
+        Scheduler(long long time, long long start=0, long long end=0) { 
+            this->interval = time; 
+            this->unInterruptStart = start;
+            this->unInterruptEnd = end;
+        }
     };
 }

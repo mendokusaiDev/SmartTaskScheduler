@@ -60,6 +60,16 @@ namespace scheduler {
 		this->type = type;
 	}
 
+	void Task::changeFixedTask(std::string name, long long starttime, long long endtime, long long duration, int type) {
+		this->name = name;
+		this->starttime = starttime;
+		this->endtime = endtime;
+		this->duration = duration;
+		this->type = type;
+		this->enddate = endtime;
+		return;
+	}
+
 
 	int Task::getTaskNum() {
 		return this->TaskNum;

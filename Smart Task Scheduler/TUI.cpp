@@ -73,6 +73,32 @@ namespace scheduler {
         return 28;
     }
 
+    static int inputHHMM(const string& label) {
+        int hh, mm;
+        while (true) {
+            cout << "\n>> [" << label << "] 날짜 및 시간 입력\n";
+            cout << "   Format: HH MM (띄어쓰기로 구분)\n";
+            cout << "   입력: ";
+
+            if (cin >> hh >> mm) {
+                //int ld = lastDayOfMonth(y, m);
+                if (hh >= 0 && hh <= 23 && mm >= 0 && mm <= 59) {
+
+                    return (long long)hh * 100LL
+                        + (long long)mm;
+                }
+                else {
+                    cout << "   (!) 유효하지 않은 날짜/시간입니다.\n";
+                }
+            }
+            else {
+                cin.clear();
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                cout << "   (!) 잘못된 입력 형식입니다. 숫자로 입력해주세요.\n";
+            }
+        }
+    }
+
     // 날짜/시간 입력 보조 함수
     static long long inputDateTime(const string& label) {
         int y, m, d, hh, mm;
@@ -124,7 +150,7 @@ namespace scheduler {
         }
 
         cout << "  [" << setw(2) << t->getTaskNum() << "] "
-             << (t->isfinished() ? "[v] " : "[ ] ")
+             << (t->isfinished() ? "[v] " : "[x] ")
              << left << setw(20) << t->getTaskName()
              << "| " << hhmm(s) << "~" << hhmm(e)
              << "| Type:" << t->getType()
@@ -223,15 +249,17 @@ namespace scheduler {
             cout << " [1] 월별 보기 (Month View)\n";
             cout << " [2] 주별 보기 (Week View)\n";
             cout << " [3] 일별 보기 (Day View)\n";
+            cout << " [4] 통계 보기 (Statistics)\n";
             cout << " ---------------------------\n";
-            cout << " [4] 작업 추가 (Add Task)\n";
-            cout << " [5] 작업 수정 (Edit Task)\n";
-            cout << " [6] 작업 삭제 (Delete Task)\n";
-            cout << " [7] 통계 보기 (Statistics)\n";
-            cout << " [8] 간격 변경 (Change Interval)\n";
+            cout << " [5] 작업 추가 (Add Task)\n";
+            cout << " [6] 고정 일정 추가 (Fixed Task)\n";
+            cout << " [7] 작업 수정 (Edit Task)\n";
+            cout << " [8] 작업 삭제 (Delete Task)\n";
+            cout << " [9] 작업 완료 표시 (Checked Task Finished)\n";
+            
             cout << " ---------------------------\n";
-            cout << " [9] 고정 일정 추가 (Fixed Task)\n";
-            cout << " [A] 작업 불가 시간 설정 (Set Blocked Time)\n";
+            cout << " [A] 간격 변경 (Change Interval)\n";
+            cout << " [B] 작업 불가 시간 설정 (Set Blocked Time)\n";
             cout << " [0] 종료 (Exit)\n";
             cout << "===============================\n";
             cout << " 명령 선택 >> ";
@@ -242,6 +270,7 @@ namespace scheduler {
             if (ch == '0') break;
             if (ch >= '1' && ch <= '9') cmd = ch - '0';
             if (ch == 'a' || ch == 'A') cmd = 10;
+            if (ch == 'b' || ch == 'B') cmd = 11;
 
             system("cls"); // 메뉴 선택 후 화면 클리어
 
@@ -260,7 +289,7 @@ namespace scheduler {
                 last_choice = 3;
                 break;
             
-            case 4: // Add Task
+            case 5: // Add Task
                 showCursor();
                 addTask();
                 hideCursor();
@@ -268,7 +297,7 @@ namespace scheduler {
                 _getch();
                 last_choice = 0; // 작업 후엔 메뉴로
                 break;
-            case 5: // Edit Task
+            case 7: // Edit Task
                 showCursor();
                 editTask();
                 hideCursor();
@@ -276,7 +305,7 @@ namespace scheduler {
                 _getch();
                 last_choice = 0;
                 break;
-            case 6: // Delete Task
+            case 8: // Delete Task
                 showCursor();
                 deleteTask();
                 hideCursor();
@@ -284,13 +313,13 @@ namespace scheduler {
                 _getch();
                 last_choice = 0;
                 break;
-            case 7: // Statistics
+            case 4: // Statistics
                 showStatistics();
                 cout << "\n(아무 키나 누르면 메뉴로 돌아갑니다)";
                 _getch();
                 last_choice = 0;
                 break;
-            case 8: // Change Interval
+            case 10: // Change Interval
                 showCursor();
                 changeInterval();
                 hideCursor();
@@ -298,7 +327,15 @@ namespace scheduler {
                 _getch();
                 last_choice = 0;
                 break;
-            case 9: // Add Fixed Task
+            case 9:  //Check Finished
+                showCursor();
+                checkFinished();
+                hideCursor();
+                cout << "\n(아무 키나 누르면 메뉴로 돌아갑니다)";
+                _getch();
+                last_choice = 0;
+                break;
+            case 6: // Add Fixed Task
                 showCursor();
                 addFixedTask();
                 hideCursor();
@@ -306,7 +343,7 @@ namespace scheduler {
                 _getch();
                 last_choice = 0;
                 break;
-            case 10: // Set Uninterrupted Time
+            case 11: // Set Uninterrupted Time
                 showCursor();
                 setUninterruptedTime();
                 hideCursor();
@@ -504,27 +541,92 @@ namespace scheduler {
         ll dur, due;
         int type;
 
+        Task* t = nullptr;
+
+        for (Task * cur: queuedList) {
+            if (cur->getTaskNum() == num) {
+                t = cur;
+                break;
+            }
+        }
+
+        if (t == nullptr) {
+            cout << "없는 작업 번호\n";
+            cout << "------------------------------------------------\n";
+            return;
+        }
+
         cout << "새 이름: ";
         getline(cin, name);
 
-        cout << "새 소요(분): ";
-        cin >> dur;
 
-        due = inputDateTime("새 마감 기한");
+        if (!t->isFixed()) {
+            cout << "새 소요(분): ";
+            cin >> dur;
 
-        printTaskTypeInfo();
-        cout << "새 타입 번호: ";
-        cin >> type;
-        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            due = inputDateTime("새 마감 기한");
 
-        if (c->editTask(num, name, dur, due, type))
-            cout << ">> 수정 성공!\n";
-        else
-            cout << ">> 수정 실패\n";
+            printTaskTypeInfo();
+            cout << "새 타입 번호: ";
+            cin >> type;
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+            if (c->editTask(num, name, dur, due, type))
+                cout << ">> 수정 성공!\n";
+            else
+                cout << ">> 수정 실패\n";
+
+            return;
+        }
+
+        else {
+            ll start = inputDateTime("시작 시간");
+            ll end = inputDateTime("종료 시간");
+
+            if (start >= end) {
+                cout << ">> 오류: 종료 시간이 시작 시간보다 빨라야 합니다.\n";
+                return;
+            }
+
+            int type;
+            printTaskTypeInfo();
+            cout << "타입 번호 입력: ";
+            cin >> type;
+            // 다음 getline 대비 버퍼 정리
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+            if (c->editTask(num, name, start, end, type, 1))
+                cout << ">> 수정 성공!\n";
+            else
+                cout << ">> 수정 실패\n";
+        }
+
     }
 
     void TUI::deleteTask() {
         cout << "\n[작업 삭제]\n";
+
+        cout << "------------------------------------------------\n";
+        cout << " 현재 대기열(Queue)에 있는 작업 목록\n";
+        cout << "------------------------------------------------\n";
+
+        vector<Task*> queuedList;
+        c->getQueuedTasks(queuedList); // [변경] getAllTasks -> getQueuedTasks
+
+        if (queuedList.empty()) {
+            cout << "  (수정할 수 있는 대기 중인 작업이 없습니다)\n";
+            cout << "------------------------------------------------\n";
+            // 작업이 없으면 바로 돌아가는 게 좋습니다.
+            return;
+        }
+
+        for (Task* t : queuedList) {
+            printTaskLine(t);
+        }
+        cout << "------------------------------------------------\n";
+
+
+
         int num;
         cout << "삭제할 Task 번호: ";
         cin >> num;
@@ -541,9 +643,15 @@ namespace scheduler {
         system("cls");
         cout << "\n[ 통계 정보 ]\n";
         auto st = c->getStatistics();
-        cout << " - 완료된 작업 : " << st.finished_count << "\n";
-        cout << " - 미완료 작업 : " << st.unfinished_count << "\n";
-        cout << " - 남은 작업   : " << st.to_do_count << "\n";
+        cout << " - 추가된 전체 작업: " << st.total_task_count << "\n";
+        cout << " - 완료된 작업     : " << st.finished_count << "\n";
+        cout << " - 미완료 작업     : " << st.unfinished_count << "\n";
+        cout << " - 남은 작업       : " << st.to_do_count << "\n\n";
+
+        cout << "추가된 종류 별 작업 수: " << "\n";
+        cout << " - 과제            :" << st.tasktypes[0] << "\n";
+        cout << " - 약속            :" << st.tasktypes[1] << "\n";
+        cout << " - 기타            :" << st.tasktypes[2] << "\n";
     }
 
     void TUI::changeInterval() {
@@ -561,6 +669,42 @@ namespace scheduler {
         } else {
             cout << ">> 변경 실패\n";
         }
+    }
+
+    void TUI::checkFinished() {
+
+        cout << "\n[작업 완료 표시]\n";
+
+        cout << "------------------------------------------------\n";
+        cout << " 현재 대기열(Queue)에 있는 작업 목록\n";
+        cout << "------------------------------------------------\n";
+
+        vector<Task*> queuedList;
+        c->getQueuedTasks(queuedList); // [변경] getAllTasks -> getQueuedTasks
+
+        if (queuedList.empty()) {
+            cout << "  (수정할 수 있는 대기 중인 작업이 없습니다)\n";
+            cout << "------------------------------------------------\n";
+            // 작업이 없으면 바로 돌아가는 게 좋습니다.
+            return;
+        }
+
+        for (Task* t : queuedList) {
+            printTaskLine(t);
+        }
+        cout << "------------------------------------------------\n";
+
+        int num;
+        cout << "완료 표시할 Task 번호: ";
+        while (!(cin >> num)) {
+            cin.clear(); cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            cout << "숫자만 입력하세요: ";
+        }
+
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+        c->markFinished(num);
+
     }
 
     // 요구사항: 고정 일정 추가
@@ -600,8 +744,8 @@ namespace scheduler {
         // 주의: Scheduler 로직에 따르면 YYYYMMDDHHMM이 아니라 HHMM(시간/분)만 필요할 수 있습니다.
         // 현재 로직대로라면 날짜까지 포함된 큰 숫자가 들어가게 됩니다. 
         // 만약 매일 반복되는 시간을 원하신다면 입력 방식을 변경해야 할 수도 있습니다.
-        ll start = inputDateTime("시작 시간");
-        ll end = inputDateTime("종료 시간");
+        ll start = inputHHMM("시작 시간");
+        ll end = inputHHMM("종료 시간");
 
         if (start >= end) {
             cout << ">> 오류: 시간 범위가 잘못되었습니다.\n";

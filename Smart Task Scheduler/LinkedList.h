@@ -33,7 +33,14 @@ namespace scheduler {
 
 		template<class Item>
 		static void insert_head(node<Item>*& headptr, Item task) {
-			headptr = new node<Item>(task);
+			node<Item>* ins = new node<Item>(task);
+			
+			if(headptr==nullptr)
+				headptr = ins;
+			else {
+				ins->setLink(headptr);
+				headptr = ins;
+			}
 
 			return;
 		}

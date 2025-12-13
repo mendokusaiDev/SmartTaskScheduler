@@ -132,20 +132,30 @@ namespace scheduler {
 		std::vector<Task*> newq, newf;
 		//1. 먼저 queue에 있는 작업 완료 표시, 완료 안된것은 newq에 push
 		for (int cur : queued) {
-			long long starttime, endtime;
+			long long starttime, endtime, enddate;
 			allTasks[cur]->getTime(starttime, endtime);
-			if (endtime < curtime) {
-				markFinished(cur);
-				finished.push_back(cur);
+			enddate = allTasks[cur]->getEndDate();
+			if (enddate < curtime) {
+				stat.unfinished_count++;
+				stat.to_do_count--;
+				//markFinished(cur);
+				//finished.push_back(cur);
 				continue;
 			}
+
+			if (allTasks[cur]->isfinished()) continue;
 			newq.push_back(allTasks[cur]);
 		}
 
 		//2. failed에 있는 것 중 enddate가 안지난것만 남기기
 		for (int cur : failed) {
 			long long enddate = allTasks[cur]->getEndDate();
-			if (enddate < curtime) continue;
+			if (enddate < curtime) {
+				stat.unfinished_count++;
+				stat.to_do_count--;
+				continue;
+			}
+			if (allTasks[cur]->isfinished()) continue;
 			newq.push_back(allTasks[cur]);
 		}
 
@@ -221,6 +231,7 @@ namespace scheduler {
 		Task * t = new Task(name, duedate, dur, type, tasks_count);
 		this->allTasks[this->tasks_count] = t;
 		this->tasks_count++;
+		stat.total_task_count++;
 
 		std::vector<Task*> tempq, tempf;
 		for (int ptr : queued) tempq.push_back(this->allTasks[ptr]);
@@ -229,6 +240,9 @@ namespace scheduler {
 		//S->makeSchedule(tempq, tempf);
 
 		remakeCal(tempq, tempf);
+
+		stat.to_do_count++;
+		stat.tasktypes[type]++;
 
 		refreshCal();
 
@@ -249,6 +263,7 @@ namespace scheduler {
 		Task* t = new Task(1, name, startime, endtime, duration, type, tasks_count);  //고정 일정
 		this->allTasks[this->tasks_count] = t;
 		this->tasks_count++;
+		stat.total_task_count++;
 
 		std::vector<Task*> tempq, tempf;
 		for (int ptr : queued) tempq.push_back(this->allTasks[ptr]);
@@ -258,26 +273,47 @@ namespace scheduler {
 
 		remakeCal(tempq, tempf);
 
+		stat.to_do_count++;
+		stat.tasktypes[type]++;
+
 		//refreshCal();
 
 		return true;
 	}
 	void Calender::setUninterruptedTime(long long start, long long end) {
 		S->setUnterruptedTime(start, end);
+		refreshCal();
 	}
 
 	bool Calender::deleteTask(int taskNum) {   //미완료 일정에 대해서 삭제 진행
 		refreshCal();
-		//1. 이미 끝난 일
+		//1. 지난일
+		int year, month, day, hour, min;
+		get_current_time(year, month, day, hour, min);
+
+		long long cur_time = (long long)year * 100000000LL + (long long)month * 1000000LL + day * 10000 + hour * 100 + min;
+
 		if (allTasks.find(taskNum) == allTasks.end()) {
 			return false;
 		}
-		if (allTasks[taskNum]->isfinished()) {
+
+
+		if (allTasks[taskNum]->getEndDate()<cur_time) {
 			long long starttime, endtime;
 			allTasks[taskNum]->getTime(starttime, endtime);
 			int date = starttime / 10000;
 			cal_Day* cur = find(date);
 			cur->freeTaskNum(taskNum);
+			if (allTasks[taskNum]->isfinished()) {
+				stat.finished_count--;
+				stat.total_task_count--;
+			}
+			else {
+				stat.unfinished_count--;
+				stat.total_task_count--;
+			}
+
+			stat.tasktypes[allTasks[taskNum]->getType()]--;
 			allTasks.erase(taskNum);
 			return true;
 		}
@@ -287,9 +323,19 @@ namespace scheduler {
 			std::vector<Task*> newq, newf;
 			for (int cur : queued) {
 				if (cur != taskNum) newq.push_back(allTasks[cur]);
+				else {
+					stat.to_do_count--;
+					stat.tasktypes[allTasks[cur]->getType()]--;
+					stat.total_task_count--;
+				}
 			}
 			for (int cur : failed) {
 				if (cur != taskNum) newq.push_back(allTasks[cur]);
+				else {
+					stat.to_do_count--;
+					stat.tasktypes[allTasks[cur]->getType()]--;
+					stat.total_task_count--;
+				}
 			}
 
 			remakeCal(newq, newf);
@@ -299,7 +345,7 @@ namespace scheduler {
 		return false;
 	}
 
-	bool Calender::editTask(int taskNum, std::string name, int dur, int duedate, int type) {
+	bool Calender::editTask(int taskNum, std::string name, long long dur, long long duedate, int type) {
 		if (allTasks.find(taskNum) == allTasks.end()) {
 			std::cout << "edit Task: no task \n";    //디버깅 코드
 			return false;
@@ -319,8 +365,32 @@ namespace scheduler {
 
 	}
 
+	bool Calender::editTask(int taskNum, std::string name, long long starttime, long long endtime, int type, bool isFixed) {
+		if (allTasks.find(taskNum) == allTasks.end()) {
+			std::cout << "edit Task: no task \n";    //디버깅 코드
+			return false;
+		}
+
+		Task* cur = allTasks[taskNum];
+		stat.tasktypes[cur->getType()]--;
+		long long dur = diffMinutes(starttime, endtime);
+		cur->changeFixedTask(name, starttime, endtime, dur, type);
+		stat.tasktypes[type]++;
+		std::vector<Task*> newq, newf;
+		for (int cur : queued) newq.push_back(allTasks[cur]);
+		for (int cur : failed) newq.push_back(allTasks[cur]);
+
+		remakeCal(newq, newf);
+
+		return true;
+	}
+
 	void Calender::markFinished(int taskNum) {  //일단 마킹만 시행
 		allTasks[taskNum]->done();
+		stat.finished_count++;
+		stat.tasktypes[allTasks[taskNum]->getType()]++;
+		stat.to_do_count--;
+		refreshCal();
 		return;
 	}
 
@@ -379,29 +449,15 @@ namespace scheduler {
 				tasks.push_back(allTasks[taskNum]);
 			}
 		}
+
+		for (int taskNum : failed) {
+			if (allTasks.find(taskNum) != allTasks.end()) {
+				tasks.push_back(allTasks[taskNum]);
+			}
+		}
 	}
 
 	Calender::calStats Calender::getStatistics() {
-
-		// 1. 현재 벡터 사이즈를 기준으로 통계 변수(stat) 최신화
-		stat.finished_count = finished.size();    // 완료된 작업 수
-		stat.unfinished_count = failed.size();    // 실패한 작업 수
-		stat.to_do_count = queued.size();         // 해야 할 작업 수
-		
-		// 2. 작업 종류(Type)별 통계도 다시 계산 (기존 데이터 오차 방지
-			for (int i = 0; i < 100; i++) {
-			stat.tasktypes[i] = 0;
-		}
-		
-		//    모든 작업을 순회하며 타입별 카운트 집계
-		for (auto const& pair : allTasks) {
-			Task* t = pair.second;
-			int type = t->getType();
-			// 유효한 타입 인덱스인지 확인 후 증가
-			if (type >= 0 && type < 100) {
-				stat.tasktypes[type]++;
-			}
-		}
 		
 		return stat;
 	}
@@ -476,6 +532,11 @@ namespace scheduler {
 		
 		long long S_int = S->get_interval();
 		ofs.write((char*)&S_int, sizeof(long long)); //interval 저장하기
+
+		long long start, end;
+		S->getUninterruptedTime(start, end);
+		ofs.write((char*)&start, sizeof(long long));
+		ofs.write((char*)&end, sizeof(long long));
 		//std::cout << "interval: " << S_int << std::endl;
 
 		ofs.close();
@@ -535,10 +596,14 @@ namespace scheduler {
 		ifs.read((char*)&stat, sizeof(calStats));  //통계 저장하기
 		ifs.read((char*)&tasks_count, sizeof(int)); //캘린더 tasks_count 저장
 
-		long long S_int = -1;
+		long long S_int, start, end = -1;
 		ifs.read((char*)&S_int, sizeof(long long));   //스케줄러 인터벌 저장
+		ifs.read((char*)&start, sizeof(long long));
+		ifs.read((char*)&end, sizeof(long long));
+
 		//std::cout << "interval: " << S_int << std::endl;
 		S->ChangeInterval(S_int);
+		S->setUnterruptedTime(start, end);
 
 		ifs.close();
 

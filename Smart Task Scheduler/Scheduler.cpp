@@ -17,6 +17,53 @@ namespace scheduler {
     namespace {
         static int max_day_of_month[13] = { 0,31,28,31,30,31,30,31,31,30,31,30,31 };
 
+        static constexpr int KST_OFFSET_SEC = 9 * 60 * 60;
+
+        // UTC time_t -> tm (KST 달력값)
+        static std::tm utc_to_kst_tm(time_t utc) {
+            time_t shifted = utc + KST_OFFSET_SEC;
+            return *std::gmtime(&shifted); // gmtime은 UTC 달력값을 뽑는데, shifted를 넣었으니 KST처럼 나옴
+        }
+
+        // KST 달력값(tm) -> UTC time_t
+        static time_t kst_tm_to_utc(const std::tm& kst_tm) {
+            std::tm tmp = kst_tm;
+            tmp.tm_isdst = 0;
+            // tmp를 "UTC 달력값"으로 보고 epoch으로 만든 뒤, KST 오프셋을 빼면 UTC가 됨
+            return _mkgmtime(&tmp) - KST_OFFSET_SEC;
+        }
+
+        // UTC time_t -> YYYYMMDDhhmm (KST 기준 저장값)
+        static long long utc_to_kst_ll(time_t utc) {
+            std::tm t = utc_to_kst_tm(utc);
+            long long year = (t.tm_year + 1900) * 100000000LL;
+            long long month = (t.tm_mon + 1) * 1000000LL;
+            long long day = t.tm_mday * 10000LL;
+            long long hour = t.tm_hour * 100LL;
+            long long min = t.tm_min;
+            return year + month + day + hour + min;
+        }
+
+        // YYYYMMDDhhmm(KST 저장값) -> UTC time_t
+        static time_t kst_ll_to_utc(long long yyyymmddhhmm) {
+            int y = (int)(yyyymmddhhmm / 100000000);
+            int m = (int)((yyyymmddhhmm % 100000000) / 1000000);
+            int d = (int)((yyyymmddhhmm % 1000000) / 10000);
+            int hh = (int)((yyyymmddhhmm % 10000) / 100);
+            int mm = (int)(yyyymmddhhmm % 100);
+
+            std::tm t{};
+            t.tm_year = y - 1900;
+            t.tm_mon = m - 1;
+            t.tm_mday = d;
+            t.tm_hour = hh;
+            t.tm_min = mm;
+            t.tm_sec = 0;
+            t.tm_isdst = 0;
+
+            return kst_tm_to_utc(t);
+        }
+
         int get_max_day(int year, int month) {
             if (month != 2) return max_day_of_month[month];
             if (year % 100 == 0 && year % 400 != 0) return 28;
@@ -24,19 +71,63 @@ namespace scheduler {
             return 28;
         }
 
-        long long ConvTtoLL(time_t date) {
-            std::tm tms = *std::gmtime(&date);
-            ll year, month, day, hour, min;
-            min = tms.tm_min;
-            hour = tms.tm_hour * 100;
-            day = tms.tm_mday * 10000;
-            month = (tms.tm_mon + 1) * 1000000LL;
-            year = (tms.tm_year + 1900) * 100000000LL;
-            return year + month + day + hour + min;
+        long long ConvTtoLL(time_t utcDate) {
+            return utc_to_kst_ll(utcDate); // 저장용은 항상 KST 기준
         }
 
         bool isOverlapping(ll start1, ll end1, ll start2, ll end2) {
             return std::max(start1, start2) < std::min(end1, end2);
+        }
+
+        int toMinute(long long hhmm) {
+            return (hhmm / 100) * 60 + (hhmm % 100);
+        }
+
+        bool isOverlapWithUninterrupt(time_t startT, time_t endT,
+            long long dndStart, long long dndEnd)
+        {
+            int dndS = toMinute(dndStart);
+            int dndE = toMinute(dndEnd);
+
+            std::tm ts = utc_to_kst_tm(startT);
+            std::tm te = utc_to_kst_tm(endT);
+
+            int sMin = ts.tm_hour * 60 + ts.tm_min;
+            int eMin = te.tm_hour * 60 + te.tm_min;
+
+            // ✅ 자정 넘김 판정은 tm_yday/tm_year로
+            bool crossesMidnight =
+                (ts.tm_year != te.tm_year) || (ts.tm_yday != te.tm_yday);
+            if (crossesMidnight) eMin += 1440;
+
+            auto overlap = [](int a1, int a2, int b1, int b2) {
+                return std::max(a1, b1) < std::min(a2, b2);
+                };
+
+            if (dndS < dndE) {
+                return overlap(sMin, eMin, dndS, dndE);
+            }
+            else {
+                return overlap(sMin, eMin, dndS, 1440) ||
+                    overlap(sMin, eMin, 1440, 1440 + dndE);
+            }
+        }
+
+
+        time_t jumpToUninterruptEnd(time_t curUtc, long long dndEndHHMM)
+        {
+            int endMin = toMinute(dndEndHHMM);
+
+            std::tm kst = utc_to_kst_tm(curUtc);
+            int curMin = kst.tm_hour * 60 + kst.tm_min;
+
+            if (curMin >= endMin) kst.tm_mday += 1;
+
+            kst.tm_hour = endMin / 60;
+            kst.tm_min = endMin % 60;
+            kst.tm_sec = 0;
+
+            return kst_tm_to_utc(kst); // ✅ UTC time_t로 복원
         }
     }
 
@@ -48,6 +139,12 @@ namespace scheduler {
     void Scheduler::setUnterruptedTime(long long start, long long end) {
         this->unInterruptStart = start;
         this->unInterruptEnd = end;
+    }
+
+    void Scheduler::getUninterruptedTime(long long& start, long long& end) {
+        start = this->unInterruptStart;
+        end = this->unInterruptEnd;
+        return;
     }
 
     void Scheduler::makeSchedule(std::vector<Task*>& original, std::vector<Task*>& failed) {
@@ -69,7 +166,7 @@ namespace scheduler {
         }
 
         // 스케줄링 시작 시간 (현재 KST + 인터벌)
-        time_t currentTimeT = std::time(NULL) + 9 * 60 * 60 + this->interval * 60;
+        time_t currentTimeT = std::time(NULL) + this->interval * 60;
         std::vector<Task*> scheduledTasks;
 
         // 고정 일정 먼저 포함
@@ -98,23 +195,12 @@ namespace scheduler {
 
                 // 방해 금지 시간 체크
                 if (this->unInterruptStart != this->unInterruptEnd) {
-                    std::tm tms = *std::gmtime(&currentTimeT);
-                    long long curHHMM = tms.tm_hour * 100 + tms.tm_min;
-                    long long start = this->unInterruptStart;
-                    long long end = this->unInterruptEnd;
-                    bool isInUninterrupted = false;
-
-                    if (start < end) { if (curHHMM >= start && curHHMM < end) isInUninterrupted = true; }
-                    else { if (curHHMM >= start || curHHMM < end) isInUninterrupted = true; }
-
-                    if (isInUninterrupted) {
+                    if (isOverlapWithUninterrupt(currentTimeT, estimatedEndTimeT,
+                        this->unInterruptStart, this->unInterruptEnd))
+                    {
                         collisionDetected = true;
-                        int targetHour = end / 100;
-                        int targetMin = end % 100;
-                        std::tm jumpTm = *std::gmtime(&currentTimeT);
-                        if ((jumpTm.tm_hour * 100 + jumpTm.tm_min) >= end) jumpTm.tm_mday += 1;
-                        jumpTm.tm_hour = targetHour; jumpTm.tm_min = targetMin; jumpTm.tm_sec = 0;
-                        currentTimeT = std::mktime(&jumpTm);
+                        currentTimeT = jumpToUninterruptEnd(currentTimeT, this->unInterruptEnd);
+                        continue; 
                     }
                 }
 
@@ -135,8 +221,9 @@ namespace scheduler {
                             f_tm.tm_year = f_year - 1900; f_tm.tm_mon = f_month - 1; f_tm.tm_mday = f_day;
                             f_tm.tm_hour = f_hour; f_tm.tm_min = f_min; f_tm.tm_isdst = -1;
 
-                            time_t fixedEndTimeT = std::mktime(&f_tm);
-                            currentTimeT = fixedEndTimeT + (this->interval * 60) + 9*60*60;
+                            time_t fixedEndUtc = kst_ll_to_utc(fEnd);
+                            currentTimeT = fixedEndUtc + (this->interval * 60);
+
                             break;
                         }
                     }

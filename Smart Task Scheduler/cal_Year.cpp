@@ -22,7 +22,7 @@ namespace scheduler {
 
 	void cal_Year::set_Month(int month) {
 
-		if (get_Month(month) != NULL) {
+		if (get_Month(month) != nullptr) {
 			std::cout << "error: " << month << "on " << this->year << "already exists\n";
 			return;
 		}

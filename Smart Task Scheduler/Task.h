@@ -23,6 +23,7 @@ namespace scheduler {
 		Task(bool fixed, std::string name, long long starttime, long long endtime, long long duration, int type, int taskNum);
 		Task(std::string name, saveFile* f);
 		void changeTask(std::string name, long long enddate, long long duration, int type);
+		void changeFixedTask(std::string name, long long starttime, long long endtime, long long duartion, int type);
 		int getTaskNum();
 		std::string getTaskName() { return name; }
 		void setTime(long long starttime, long long endtime);

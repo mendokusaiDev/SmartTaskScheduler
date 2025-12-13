@@ -16,6 +16,7 @@ namespace scheduler {
         void addTask();
         void editTask();
         void deleteTask();
+        void checkFinished();
 
         void showStatistics();
         void changeInterval();
